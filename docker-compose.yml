@@ -1,0 +1,34 @@
+version: '3.9'
+
+services:
+  spring-web:
+    build:
+      context: .
+      dockerfile: Dockerfile-web
+    hostname: 'web'
+    ports:
+      - '8081:8080'
+    networks:
+      - web-network
+    depends_on:
+      - db-postgres
+
+  db-postgres:
+    image: postgres:14
+    environment:
+      POSTGRES_DB: "dragons"
+      POSTGRES_USER: "admin"
+      POSTGRES_PASSWORD: "admin"
+    ports:
+      - "5432:5432"
+    networks:
+      - web-network
+    volumes:
+      - dragons-data:/var/lib/postgresql/data
+
+networks:
+  web-network:
+    driver: bridge
+
+volumes:
+  dragons-data:
