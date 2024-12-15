@@ -1,15 +1,10 @@
 package itmo.is.lab1.controllers;
 
-import itmo.is.lab1.services.common.responses.GeneralException;
-import itmo.is.lab1.services.common.responses.GeneralResponse;
 import itmo.is.lab1.services.location.requests.LocationRequest;
-import itmo.is.lab1.services.location.responses.LocationInfoResponse;
 import itmo.is.lab1.services.location.responses.LocationResponse;
 import itmo.is.lab1.services.location.LocationService;
-import itmo.is.lab1.services.location.errors.LocationForbiddenException;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
