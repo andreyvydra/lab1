@@ -1,6 +1,5 @@
 package itmo.is.lab1.services.dragon.responses;
 
-import itmo.is.lab1.models.GeneralEntity;
 import itmo.is.lab1.models.dragon.DragonHead;
 import itmo.is.lab1.services.common.responses.GeneralEntityResponse;
 import lombok.Data;

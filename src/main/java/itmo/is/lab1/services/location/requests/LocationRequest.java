@@ -1,7 +1,6 @@
 package itmo.is.lab1.services.location.requests;
 
 import itmo.is.lab1.services.common.requests.GeneralEntityRequest;
-import itmo.is.lab1.services.common.requests.GeneralRequest;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;

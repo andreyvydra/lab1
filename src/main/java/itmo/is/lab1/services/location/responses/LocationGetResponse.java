@@ -1,8 +1,6 @@
 package itmo.is.lab1.services.location.responses;
 
 import itmo.is.lab1.models.location.Location;
-import itmo.is.lab1.models.user.User;
-import itmo.is.lab1.services.common.responses.GeneralResponse;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;

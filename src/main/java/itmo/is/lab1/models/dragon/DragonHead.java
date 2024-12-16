@@ -2,7 +2,6 @@ package itmo.is.lab1.models.dragon;
 
 import itmo.is.lab1.models.GeneralEntity;
 import itmo.is.lab1.models.user.User;
-import itmo.is.lab1.services.common.requests.GeneralRequest;
 import itmo.is.lab1.services.dragon.requests.DragonHeadRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
