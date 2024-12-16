@@ -1,5 +1,8 @@
 package itmo.is.lab1.services.location.responses;
 
+import itmo.is.lab1.models.location.Location;
+import itmo.is.lab1.models.user.User;
+import itmo.is.lab1.services.common.responses.GeneralResponse;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -9,10 +12,14 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 public class LocationGetResponse extends LocationResponse {
-    private Long id;
     private Integer x;
     private Long y;
     private String name;
-    private Boolean isChangeable;
-    private Long user;
+
+    public void setValues(Location location) {
+        super.setValues(location);
+        x = location.getX();
+        y = location.getY();
+        name = location.getName();
+    }
 }

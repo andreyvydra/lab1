@@ -1,25 +1,26 @@
 package itmo.is.lab1.services.location;
 
+import itmo.is.lab1.models.location.Location;
+import itmo.is.lab1.services.common.GeneralService;
 import itmo.is.lab1.services.location.requests.LocationRequest;
+import itmo.is.lab1.services.location.responses.LocationGetResponse;
 import itmo.is.lab1.services.location.responses.LocationResponse;
-import jakarta.validation.constraints.NotNull;
+import org.springframework.stereotype.Service;
 
-import java.util.List;
 
-public interface LocationService {
+@Service
+public class LocationService extends GeneralService<LocationRequest, LocationResponse, Location> {
 
-    @NotNull
-    List<LocationResponse> findAll();
+    protected LocationGetResponse buildResponse(Location location) {
+        LocationGetResponse locationGetResponse = new LocationGetResponse();
+        locationGetResponse.setValues(location);
+        return locationGetResponse;
+    }
 
-    @NotNull
-    LocationResponse findById(Long id);
+    protected Location buildEntity(LocationRequest locationReq) {
+        Location location = new Location();
+        location.setValues(locationReq, userService.getCurrentUser());
+        return location;
+    }
 
-    @NotNull
-    LocationResponse deleteById(Long id);
-
-    @NotNull
-    LocationResponse createLocation(@NotNull LocationRequest request);
-
-    @NotNull
-    LocationResponse changeById(Long id, LocationRequest request);
 }

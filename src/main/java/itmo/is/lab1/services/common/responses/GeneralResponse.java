@@ -5,6 +5,5 @@ import lombok.experimental.Accessors;
 
 @Data
 @Accessors(chain = true)
-public class GeneralResponse {
-    private String message;
+public abstract class GeneralResponse {
 }

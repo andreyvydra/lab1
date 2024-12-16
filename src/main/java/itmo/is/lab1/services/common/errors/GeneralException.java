@@ -1,4 +1,4 @@
-package itmo.is.lab1.services.common.responses;
+package itmo.is.lab1.services.common.errors;
 
 import org.springframework.http.HttpStatus;
 
