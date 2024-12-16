@@ -11,12 +11,16 @@ import itmo.is.lab1.services.common.responses.GeneralEntityResponse;
 import itmo.is.lab1.services.common.responses.GeneralMessageResponse;
 import itmo.is.lab1.services.user.UserService;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Getter
+@Setter
 public abstract class GeneralService<T extends GeneralEntityRequest, R extends GeneralEntityResponse, E extends GeneralEntity<T>> {
     @Autowired
     protected GeneralRepository<E> repository;
@@ -41,23 +45,10 @@ public abstract class GeneralService<T extends GeneralEntityRequest, R extends G
 
 
     public GeneralMessageResponse deleteById(@NotNull Long id) {
-        Optional<E> entityOpt = repository.findById(id);
-        E entity = null;
-        if (entityOpt.isPresent()) {
-            entity = entityOpt.get();
-        }
-        if (entity == null) {
-            throw new NotFoundException();
-        }
-
-        if ((entity.getIsChangeable() && userService.getCurrentUser().getRole() == Role.ROLE_ADMIN)
-                || entity.getUser() == userService.getCurrentUser()) {
-            repository.delete(entity);
-            return new GeneralMessageResponse()
-                    .setMessage("Объект успешно удалён.");
-        }
-
-        throw new ForbiddenException();
+        E entity = getEntityById(id);
+        repository.delete(entity);
+        return new GeneralMessageResponse()
+                .setMessage("Объект успешно удалён.");
     }
 
 
@@ -74,6 +65,13 @@ public abstract class GeneralService<T extends GeneralEntityRequest, R extends G
     protected abstract E buildEntity(T request);
 
     public R updateById(@NotNull Long id, @NotNull T request) {
+        E entity = getEntityById(id);
+        entity.setValues(request, entity.getUser());
+        repository.save(entity);
+        return buildResponse(entity);
+    }
+
+    protected E getEntityById(Long id) {
         Optional<E> entityOpt = repository.findById(id);
         E entity = null;
         if (entityOpt.isPresent()) {
@@ -88,14 +86,7 @@ public abstract class GeneralService<T extends GeneralEntityRequest, R extends G
                 && entity.getUser() != userService.getCurrentUser()) {
             throw new ForbiddenException();
         }
-
-        if (!request.isValid()) {
-            throw new BadRequestException();
-        }
-
-        entity.setValues(request, entity.getUser());
-        repository.save(entity);
-        return buildResponse(entity);
+        return entity;
     }
 
 }

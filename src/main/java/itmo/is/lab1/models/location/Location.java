@@ -18,13 +18,12 @@ import lombok.experimental.Accessors;
 @Table(name = "location")
 public class Location extends GeneralEntity<LocationRequest> {
 
-    @NotNull(message = "x не может быть null.")
+    @Column(nullable = false)
     private Integer x; //Поле не может быть null
 
-    @NotNull(message = "y не может быть null.")
+    @Column(nullable = false)
     private Long y; //Поле не может быть null
 
-    @NotBlank(message = "name не может быть пустым.")
     private String name; //Строка не может быть пустой, Поле может быть null
 
 

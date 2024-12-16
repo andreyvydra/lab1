@@ -1,6 +1,8 @@
 package itmo.is.lab1.services.location.responses;
 
 import itmo.is.lab1.models.location.Location;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -10,8 +12,11 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 public class LocationGetResponse extends LocationResponse {
+    @NotNull(message = "x не может быть null.")
     private Integer x;
+    @NotNull(message = "y не может быть null.")
     private Long y;
+    @NotBlank(message = "name не может быть пустым.")
     private String name;
 
     public void setValues(Location location) {

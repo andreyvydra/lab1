@@ -21,7 +21,7 @@ public abstract class GeneralEntity<R extends GeneralEntityRequest> implements S
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @NotNull(message = "isChangeable не может быть null.")
+    @Column(nullable = false)
     private Boolean isChangeable;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

@@ -17,11 +17,9 @@ import lombok.experimental.Accessors;
 @Entity
 @Table(name = "dragon_head")
 public class DragonHead extends GeneralEntity<DragonHeadRequest> {
-    @NotNull
     @Column(nullable = false)
     private Double size; //Поле не может быть null
 
-    @NotNull
     @Column(nullable = false)
     private Long eyesCount; //Поле не может быть null
 
