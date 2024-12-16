@@ -10,19 +10,15 @@ import org.springframework.stereotype.Service;
 public class DragonHeadService extends GeneralService<DragonHeadRequest, DragonHeadResponse, DragonHead> {
     @Override
     protected DragonHeadResponse buildResponse(DragonHead element) {
-        System.out.println(element);
         DragonHeadResponse dragonHeadResponse = new DragonHeadResponse();
         dragonHeadResponse.setValues(element);
-        System.out.println(dragonHeadResponse);
         return dragonHeadResponse;
     }
 
     @Override
     protected DragonHead buildEntity(DragonHeadRequest request) {
-        System.out.println(request);
         DragonHead dragonHead = new DragonHead();
         dragonHead.setValues(request, userService.getCurrentUser());
-        System.out.println(dragonHead);
         return dragonHead;
     }
 }
