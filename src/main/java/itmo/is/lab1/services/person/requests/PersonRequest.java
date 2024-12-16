@@ -1,6 +1,5 @@
 package itmo.is.lab1.services.person.requests;
 
-import itmo.is.lab1.models.location.Location;
 import itmo.is.lab1.models.person.enums.Color;
 import itmo.is.lab1.models.person.enums.Country;
 import itmo.is.lab1.services.common.requests.GeneralEntityRequest;

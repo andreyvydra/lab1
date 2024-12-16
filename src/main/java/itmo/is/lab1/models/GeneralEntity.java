@@ -3,7 +3,6 @@ package itmo.is.lab1.models;
 import itmo.is.lab1.models.user.User;
 import itmo.is.lab1.services.common.requests.GeneralEntityRequest;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;

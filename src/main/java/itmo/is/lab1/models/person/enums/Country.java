@@ -5,5 +5,5 @@ public enum Country {
     CHINA,
     VATICAN,
     THAILAND,
-    NORTH_KOREA;
+    NORTH_KOREA
 }

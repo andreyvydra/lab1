@@ -5,8 +5,6 @@ import itmo.is.lab1.models.GeneralEntity;
 import itmo.is.lab1.models.user.User;
 import itmo.is.lab1.services.location.requests.LocationRequest;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
