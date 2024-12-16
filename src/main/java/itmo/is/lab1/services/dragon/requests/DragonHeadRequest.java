@@ -14,6 +14,6 @@ public class DragonHeadRequest extends GeneralEntityRequest {
 
     @Override
     public Boolean isValid() {
-        return size != null && eyesCount != null;
+        return size != null && eyesCount != null && this.getIsChangeable() != null;
     }
 }

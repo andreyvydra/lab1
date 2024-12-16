@@ -13,7 +13,6 @@ import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-@RestController
 public class GeneralController<T extends GeneralEntityRequest,
         R extends GeneralEntityResponse,
         E extends GeneralEntity<T>,

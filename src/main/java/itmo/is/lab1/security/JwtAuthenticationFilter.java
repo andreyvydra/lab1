@@ -41,14 +41,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String jwt = authHeader.substring(BEARER_PREFIX.length());
         String username = jwtService.extractUserName(jwt);
-        System.out.println(jwt);
-        System.out.println(username);
-        System.out.println(SecurityContextHolder.getContext().getAuthentication());
 
         if (!username.isEmpty() && SecurityContextHolder.getContext().getAuthentication() == null) {
             User user = userService
                     .getByUsername(username);
-            System.out.println(user);
 
 
             // Если токен валиден, то аутентифицируем пользователя
@@ -60,7 +56,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         null,
                         user.getAuthorities()
                 );
-                System.out.println(user.getAuthorities());
 
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 context.setAuthentication(authToken);
