@@ -1,8 +1,6 @@
 package itmo.is.lab1.services.location.requests;
 
-import itmo.is.lab1.models.GeneralEntity;
 import itmo.is.lab1.services.common.requests.GeneralEntityRequest;
-import itmo.is.lab1.services.common.responses.GeneralEntityResponse;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
