@@ -5,8 +5,10 @@ import itmo.is.lab1.services.common.GeneralService;
 import itmo.is.lab1.services.common.requests.GeneralEntityRequest;
 import itmo.is.lab1.services.common.responses.GeneralEntityResponse;
 import itmo.is.lab1.services.common.responses.GeneralMessageResponse;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,7 +24,7 @@ public class GeneralController<T extends GeneralEntityRequest,
     private L service;
 
     @PostMapping(produces = APPLICATION_JSON_VALUE)
-    public R create(@RequestBody T request) {
+    public @NotNull R create(@Validated @RequestBody T request) {
         return service.create(request);
     }
 
@@ -41,15 +43,14 @@ public class GeneralController<T extends GeneralEntityRequest,
     @DeleteMapping(
             value = "/{id}/delete",
             produces = APPLICATION_JSON_VALUE)
-    public @NotNull GeneralMessageResponse deleteById(@PathVariable @NotNull Long id) {
+    public @Valid GeneralMessageResponse deleteById(@PathVariable @NotNull Long id) {
         return service.deleteById(id);
     }
 
     @PutMapping(
             value = "/{id}/change",
             produces = APPLICATION_JSON_VALUE)
-    public @NotNull R changeById(@PathVariable @NotNull Long id, @RequestBody T request) {
-        System.out.println("upd");
+    public @NotNull R changeById(@PathVariable @NotNull Long id, @Validated @RequestBody T request) {
         return service.updateById(id, request);
     }
 }

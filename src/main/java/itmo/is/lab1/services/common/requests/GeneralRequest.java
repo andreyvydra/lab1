@@ -6,5 +6,4 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 public abstract class GeneralRequest {
-    public abstract Boolean isValid();
 }

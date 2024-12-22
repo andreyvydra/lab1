@@ -15,8 +15,4 @@ public class DragonHeadRequest extends GeneralEntityRequest {
     @NotNull(message = "eyesCount не может быть null.")
     private Long eyesCount;
 
-    @Override
-    public Boolean isValid() {
-        return size != null && eyesCount != null && this.getIsChangeable() != null;
-    }
 }

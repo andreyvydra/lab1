@@ -17,8 +17,4 @@ public class CoordinatesRequest extends GeneralEntityRequest {
     @Min(value = -348, message = "Значение поля y должно быть больше -349")
     private Integer y; //Значение поля должно быть больше -349
 
-    @Override
-    public Boolean isValid() {
-        return x != null && y != null && y > -349;
-    }
 }

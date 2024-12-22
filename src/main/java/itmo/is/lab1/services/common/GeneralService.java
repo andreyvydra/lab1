@@ -3,7 +3,6 @@ package itmo.is.lab1.services.common;
 import itmo.is.lab1.models.GeneralEntity;
 import itmo.is.lab1.models.user.enums.Role;
 import itmo.is.lab1.repositories.GeneralRepository;
-import itmo.is.lab1.services.common.errors.BadRequestException;
 import itmo.is.lab1.services.common.errors.ForbiddenException;
 import itmo.is.lab1.services.common.errors.NotFoundException;
 import itmo.is.lab1.services.common.requests.GeneralEntityRequest;
@@ -53,10 +52,6 @@ public abstract class GeneralService<T extends GeneralEntityRequest, R extends G
 
 
     public R create(@NotNull T request) {
-        if (!request.isValid()) {
-            throw new BadRequestException();
-        }
-
         E entity = buildEntity(request);
         repository.save(entity);
         return buildResponse(entity);
@@ -65,8 +60,11 @@ public abstract class GeneralService<T extends GeneralEntityRequest, R extends G
     protected abstract E buildEntity(T request);
 
     public R updateById(@NotNull Long id, @NotNull T request) {
+        System.out.println(123);
         E entity = getEntityById(id);
+        System.out.println(entity);
         entity.setValues(request, entity.getUser());
+        System.out.println(entity);
         repository.save(entity);
         return buildResponse(entity);
     }

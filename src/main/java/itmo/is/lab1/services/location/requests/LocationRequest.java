@@ -2,6 +2,7 @@ package itmo.is.lab1.services.location.requests;
 
 import itmo.is.lab1.services.common.requests.GeneralEntityRequest;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,8 +18,4 @@ public class LocationRequest extends GeneralEntityRequest {
     private Long y;
     @NotBlank(message = "name не может быть пустым.")
     private String name;
-
-    public Boolean isValid() {
-        return x != null && y != null && name != null && this.getIsChangeable() != null;
-    }
 }

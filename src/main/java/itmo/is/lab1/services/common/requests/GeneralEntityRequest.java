@@ -1,5 +1,6 @@
 package itmo.is.lab1.services.common.requests;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -8,7 +9,7 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 public abstract class GeneralEntityRequest extends GeneralRequest {
+    @NotNull(message = "isChangeable не может быть null")
     private Boolean isChangeable;
 
-    public abstract Boolean isValid();
 }

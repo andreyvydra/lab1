@@ -18,8 +18,4 @@ public class DragonCaveRequest extends GeneralEntityRequest {
     @Min(value = 1, message = "Значение numberOfTreasures должно быть больше 0")
     private Integer numberOfTreasures;
 
-    @Override
-    public Boolean isValid() {
-        return numberOfTreasures != null && numberOfTreasures > 0;
-    }
 }

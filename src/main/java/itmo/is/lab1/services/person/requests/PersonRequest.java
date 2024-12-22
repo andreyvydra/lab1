@@ -30,8 +30,4 @@ public class PersonRequest extends GeneralEntityRequest {
 
     private Country nationality; //Поле может быть null
 
-    @Override
-    public Boolean isValid() {
-        return name != null && hairColor != null && passportID != null;
-    }
 }

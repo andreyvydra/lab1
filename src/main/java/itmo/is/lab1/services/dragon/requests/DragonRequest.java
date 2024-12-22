@@ -45,9 +45,4 @@ public class DragonRequest extends GeneralEntityRequest {
     private Long head;
 
 
-    @Override
-    public Boolean isValid() {
-        return name != null && !name.isEmpty() && coordinates != null &&
-                cave != null && (age == null || age > 0) && character != null;
-    }
 }
