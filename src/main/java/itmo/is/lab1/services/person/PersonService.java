@@ -1,6 +1,7 @@
 package itmo.is.lab1.services.person;
 
 import itmo.is.lab1.models.person.Person;
+import itmo.is.lab1.repositories.PersonRepository;
 import itmo.is.lab1.services.common.GeneralService;
 import itmo.is.lab1.services.location.LocationService;
 import itmo.is.lab1.services.person.requests.PersonRequest;
@@ -9,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class PersonService extends GeneralService<PersonRequest, PersonResponse, Person> {
+public class PersonService extends GeneralService<PersonRequest, PersonResponse, Person, PersonRepository> {
     @Autowired
     private LocationService locationService;
 
@@ -29,7 +30,7 @@ public class PersonService extends GeneralService<PersonRequest, PersonResponse,
 
     @Override
     public PersonResponse updateById(Long id, PersonRequest request) {
-        Person entity = getEntityById(id);
+        Person entity = getOwnedEntityById(id);
         entity.setValues(request, entity.getUser());
         entity.setValues(request, locationService);
         repository.save(entity);

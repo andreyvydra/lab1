@@ -1,6 +1,7 @@
 package itmo.is.lab1.services.location;
 
 import itmo.is.lab1.models.location.Location;
+import itmo.is.lab1.repositories.LocationRepository;
 import itmo.is.lab1.services.common.GeneralService;
 import itmo.is.lab1.services.location.requests.LocationRequest;
 import itmo.is.lab1.services.location.responses.LocationGetResponse;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 
 @Service
-public class LocationService extends GeneralService<LocationRequest, LocationResponse, Location> {
+public class LocationService extends GeneralService<LocationRequest, LocationResponse, Location, LocationRepository> {
 
     protected LocationGetResponse buildResponse(Location location) {
         LocationGetResponse locationGetResponse = new LocationGetResponse();

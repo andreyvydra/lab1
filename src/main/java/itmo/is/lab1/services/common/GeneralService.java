@@ -25,9 +25,14 @@ import java.util.stream.Collectors;
 
 @Getter
 @Setter
-public abstract class GeneralService<T extends GeneralEntityRequest, R extends GeneralEntityResponse, E extends GeneralEntity<T>> {
+public abstract class GeneralService<
+        T extends GeneralEntityRequest,
+        R extends GeneralEntityResponse,
+        E extends GeneralEntity<T>,
+        P extends GeneralRepository<E>
+        > {
     @Autowired
-    protected GeneralRepository<E> repository;
+    protected P repository;
     @Autowired
     protected UserService userService;
 
@@ -66,7 +71,7 @@ public abstract class GeneralService<T extends GeneralEntityRequest, R extends G
 
 
     public GeneralMessageResponse deleteById(@NotNull Long id) {
-        E entity = getEntityById(id);
+        E entity = getOwnedEntityById(id);
         repository.delete(entity);
         return new GeneralMessageResponse()
                 .setMessage("Объект успешно удалён.");
@@ -83,7 +88,7 @@ public abstract class GeneralService<T extends GeneralEntityRequest, R extends G
 
     public R updateById(@NotNull Long id, @NotNull T request) {
         System.out.println(123);
-        E entity = getEntityById(id);
+        E entity = getOwnedEntityById(id);
         System.out.println(entity);
         entity.setValues(request, entity.getUser());
         System.out.println(entity);
@@ -91,7 +96,7 @@ public abstract class GeneralService<T extends GeneralEntityRequest, R extends G
         return buildResponse(entity);
     }
 
-    protected E getEntityById(Long id) {
+    protected E getOwnedEntityById(Long id) {
         Optional<E> entityOpt = repository.findById(id);
         E entity = null;
         if (entityOpt.isPresent()) {

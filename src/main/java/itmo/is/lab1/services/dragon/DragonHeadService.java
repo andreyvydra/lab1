@@ -1,13 +1,15 @@
 package itmo.is.lab1.services.dragon;
 
 import itmo.is.lab1.models.dragon.DragonHead;
+import itmo.is.lab1.repositories.DragonHeadRepository;
+import itmo.is.lab1.repositories.DragonRepository;
 import itmo.is.lab1.services.common.GeneralService;
 import itmo.is.lab1.services.dragon.requests.DragonHeadRequest;
 import itmo.is.lab1.services.dragon.responses.DragonHeadResponse;
 import org.springframework.stereotype.Service;
 
 @Service
-public class DragonHeadService extends GeneralService<DragonHeadRequest, DragonHeadResponse, DragonHead> {
+public class DragonHeadService extends GeneralService<DragonHeadRequest, DragonHeadResponse, DragonHead, DragonHeadRepository> {
     @Override
     protected DragonHeadResponse buildResponse(DragonHead element) {
         DragonHeadResponse dragonHeadResponse = new DragonHeadResponse();

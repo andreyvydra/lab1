@@ -7,6 +7,8 @@ import itmo.is.lab1.services.common.responses.GeneralEntityResponse;
 import itmo.is.lab1.services.common.responses.GeneralMessageResponse;
 import itmo.is.lab1.specification.PaginatedResponse;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -19,10 +21,10 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class GeneralController<T extends GeneralEntityRequest,
         R extends GeneralEntityResponse,
         E extends GeneralEntity<T>,
-        L extends GeneralService<T, R, E>> {
+        L extends GeneralService<T, R, E, ?>> {
 
     @Autowired
-    private L service;
+    protected L service;
 
     @PostMapping(produces = APPLICATION_JSON_VALUE)
     public @NotNull R create(@Validated @RequestBody T request) {
@@ -33,9 +35,9 @@ public class GeneralController<T extends GeneralEntityRequest,
     public @NotNull PaginatedResponse<R> findAll(
             @RequestParam(required = false, defaultValue = "") String filter,
             @RequestParam(required = false, defaultValue = "name") String sortField,
-            @RequestParam(required = false, defaultValue = "true") Boolean ascending,
-            @RequestParam(required = false, defaultValue = "0") Integer page,
-            @RequestParam(required = false, defaultValue = "10") Integer size
+            @RequestParam(required = false, defaultValue = "true") @NotNull Boolean ascending,
+            @RequestParam(required = false, defaultValue = "0") @Min(value = 0) Integer page,
+            @RequestParam(required = false, defaultValue = "10") @Min(value = 1) @Max(value = 50) Integer size
     ) {
         return service.findAll(filter, sortField, ascending, page, size);
     }
