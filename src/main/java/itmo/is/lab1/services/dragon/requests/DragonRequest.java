@@ -25,7 +25,6 @@ public class DragonRequest extends GeneralEntityRequest {
     @NotNull(message = "coordinates не может быть null")
     private Long coordinates; //Поле не может быть null
 
-    @NotNull(message = "creationDate не может быть null")
     private String creationDate; //Поле не может быть null, Значение этого поля должно генерироваться автоматически
 
     @NotNull(message = "cave не может быть null")

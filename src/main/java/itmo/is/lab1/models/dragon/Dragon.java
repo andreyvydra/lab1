@@ -14,6 +14,7 @@ import itmo.is.lab1.services.dragon.requests.DragonRequest;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -29,18 +30,22 @@ import java.util.Optional;
 @Entity
 @Table(name = "dragon")
 public class Dragon extends GeneralEntity<DragonRequest> {
-    @NotBlank
+    @NotNull(message = "name не может быть null")
+    @NotBlank(message = "name не может быть пустым")
     @Column(nullable = false)
     private String name; //Поле не может быть null, Строка не может быть пустой
 
+    @NotNull(message = "coordinates не может быть null")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "coordinate_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Coordinates coordinates; //Поле не может быть null
 
+    @NotNull(message = "name не может быть null")
     @Column(nullable = false)
     private java.util.Date creationDate; //Поле не может быть null, Значение этого поля должно генерироваться автоматически
 
+    @NotNull(message = "cave не может быть null")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "dragon_cave_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -48,38 +53,40 @@ public class Dragon extends GeneralEntity<DragonRequest> {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "killer_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private Person killer; //Поле может быть null
 
     @Min(value = 1, message = "Значение поля age должно быть больше 0")
     private Integer age; //Значение поля должно быть больше 0, Поле может быть null
+
     private Boolean speaking; //Поле может быть null
+
     @Enumerated(EnumType.STRING)
     private Color color; //Поле может быть null
 
+    @NotNull(message = "character не может быть null")
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private DragonCharacter character; //Поле не может быть null
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = true)
-    @JoinColumn(name = "head_id", nullable = true)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "head_id")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private DragonHead head;
 
     public void setValues(DragonRequest request, User user, PersonRepository pr, DragonHeadRepository dr, DragonCaveRepository dcr, CoordinatesRepository cr) {
         super.setValues(request, user);
         name = request.getName();
-        Optional<Coordinates> coordinates1 = cr.findById(request.getCoordinates());
-        if (coordinates1.isEmpty()) {
-            throw new GeneralException(HttpStatus.BAD_REQUEST, "У дракона должна быть координата!");
+        if (request.getCoordinates() != null) {
+            Optional<Coordinates> coordinates1 = cr.findById(request.getCoordinates());
+            coordinates = coordinates1.orElse(null);
         }
-        coordinates = coordinates1.get();
-        creationDate = new java.util.Date();
-        Optional<DragonCave> dragonCave = dcr.findById(request.getCave());
-        if (dragonCave.isEmpty()) {
-            throw new GeneralException(HttpStatus.BAD_REQUEST, "У дракона должна быть пещера!");
+
+        if (creationDate == null) creationDate = new java.sql.Timestamp(new java.util.Date().getTime());
+        if (request.getCave() != null) {
+            Optional<DragonCave> dragonCave = dcr.findById(request.getCave());
+            cave = dragonCave.orElse(null);
         }
-        cave = dragonCave.get();
 
         if (request.getKiller() != null) {
             Optional<Person> person = pr.findById(request.getKiller());

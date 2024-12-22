@@ -22,7 +22,6 @@ public class PersonResponse extends GeneralEntityResponse {
     @NotNull(message = "hairColor не может быть null.")
     private Color hairColor; //Поле не может быть null
 
-
     private Long location; //Поле может быть null
 
     @NotNull(message = "passportId не может быть null.")
@@ -35,7 +34,7 @@ public class PersonResponse extends GeneralEntityResponse {
         name = entity.getName();
         eyeColor = entity.getEyeColor();
         hairColor = entity.getHairColor();
-        location = entity.getLocation().getId();
+        if (entity.getLocation() != null) location = entity.getLocation().getId();
         passportID = entity.getPassportID();
         nationality = entity.getNationality();
     }

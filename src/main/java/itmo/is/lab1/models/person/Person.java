@@ -7,6 +7,8 @@ import itmo.is.lab1.models.person.enums.Country;
 import itmo.is.lab1.services.location.LocationService;
 import itmo.is.lab1.services.person.requests.PersonRequest;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -22,22 +24,28 @@ import java.util.Optional;
 @Entity
 @Table(name = "person")
 public class Person extends GeneralEntity<PersonRequest> {
+    @NotNull(message = "name не может быть null.")
+    @NotBlank(message = "person не может быть пустым")
     @Column(nullable = false)
     private String name; //Поле не может быть null, Строка не может быть пустой
+
     @Enumerated(EnumType.STRING)
     private Color eyeColor; //Поле может быть null
 
+    @NotNull(message = "hairColor не может быть null")
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Color hairColor; //Поле не может быть null
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "location_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "location_id")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private Location location; //Поле может быть null
 
+    @NotNull(message = "hairColor не может быть null")
     @Column(nullable = false, unique = true)
     private String passportID; //Значение этого поля должно быть уникальным, Поле не может быть null
+
     @Enumerated(EnumType.STRING)
     private Country nationality; //Поле может быть null
 
@@ -47,8 +55,10 @@ public class Person extends GeneralEntity<PersonRequest> {
         this.eyeColor = request.getEyeColor();
         this.name = request.getName();
         this.hairColor = request.getHairColor();
-        Optional<Location> location1 = service.getRepository().findById(request.getLocation());
-        this.location = location1.orElse(null);
+        if (request.getLocation() != null) {
+            Optional<Location> location1 = service.getRepository().findById(request.getLocation());
+            this.location = location1.orElse(null);
+        }
         this.passportID = request.getPassportID();
         this.nationality = request.getNationality();
     }

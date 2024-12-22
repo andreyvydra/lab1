@@ -13,9 +13,10 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class CoordinatesResponse extends GeneralEntityResponse {
 
-    @NotNull
+    @NotNull(message = "x не может быть null")
     private Long x; //Поле не может быть null
-    @NotNull
+
+    @NotNull(message = "y не может быть null")
     @Min(value = -348, message = "Значение поля y должно быть больше -349")
     private Integer y; //Значение поля должно быть больше -349
 

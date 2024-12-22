@@ -8,6 +8,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -18,11 +19,13 @@ import lombok.experimental.Accessors;
 @Entity
 @Table(name = "coordinates")
 public class Coordinates extends GeneralEntity<CoordinatesRequest> {
+    @NotNull(message = "x не может быть null")
     @Column(nullable = false)
     private Long x; //Поле не может быть null
 
-    @Column(nullable = false)
+    @NotNull(message = "y не может быть null")
     @Min(value = -348, message = "Значение поля y должно быть больше -349")
+    @Column(nullable = false)
     private Integer y; //Значение поля должно быть больше -349
 
     @Override

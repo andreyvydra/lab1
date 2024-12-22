@@ -5,6 +5,7 @@ import itmo.is.lab1.services.common.responses.GeneralMessageResponse;
 import itmo.is.lab1.services.common.responses.GeneralResponse;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
@@ -59,6 +60,13 @@ public class ExceptionAdvice {
     public ResponseEntity<GeneralResponse> handleUsernameException(ConstraintViolationException e) {
         GeneralMessageResponse response = new GeneralMessageResponse().setMessage(e.getMessage());
         return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<GeneralMessageResponse> handleDataIntegrityViolationException(DataIntegrityViolationException e) {
+        GeneralMessageResponse response = new GeneralMessageResponse();
+        response.setMessage("Ошибка при сохранении данных. Пожалуйста, убедитесь, что указанный пасспорт уникален.");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
 

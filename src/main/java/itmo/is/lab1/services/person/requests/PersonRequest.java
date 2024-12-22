@@ -22,7 +22,6 @@ public class PersonRequest extends GeneralEntityRequest {
     @NotNull(message = "hairColor не может быть null.")
     private Color hairColor; //Поле не может быть null
 
-
     private Long location; //Поле может быть null
 
     @NotNull(message = "passportId не может быть null.")
