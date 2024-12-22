@@ -39,16 +39,17 @@ public class GeneralController<T extends GeneralEntityRequest,
     }
 
     @DeleteMapping(
-            value = "/{id}",
+            value = "/{id}/delete",
             produces = APPLICATION_JSON_VALUE)
     public @NotNull GeneralMessageResponse deleteById(@PathVariable @NotNull Long id) {
         return service.deleteById(id);
     }
 
     @PutMapping(
-            value = "/{id}",
+            value = "/{id}/change",
             produces = APPLICATION_JSON_VALUE)
     public @NotNull R changeById(@PathVariable @NotNull Long id, @RequestBody T request) {
+        System.out.println("upd");
         return service.updateById(id, request);
     }
 }
