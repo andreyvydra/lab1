@@ -5,6 +5,7 @@ import itmo.is.lab1.services.common.GeneralService;
 import itmo.is.lab1.services.common.requests.GeneralEntityRequest;
 import itmo.is.lab1.services.common.responses.GeneralEntityResponse;
 import itmo.is.lab1.services.common.responses.GeneralMessageResponse;
+import itmo.is.lab1.specification.PaginatedResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +30,14 @@ public class GeneralController<T extends GeneralEntityRequest,
     }
 
     @GetMapping(produces = APPLICATION_JSON_VALUE)
-    public @NotNull List<R> findAll() {
-        return service.findAll();
+    public @NotNull PaginatedResponse<R> findAll(
+            @RequestParam(required = false, defaultValue = "") String filter,
+            @RequestParam(required = false, defaultValue = "name") String sortField,
+            @RequestParam(required = false, defaultValue = "true") Boolean ascending,
+            @RequestParam(required = false, defaultValue = "0") Integer page,
+            @RequestParam(required = false, defaultValue = "10") Integer size
+    ) {
+        return service.findAll(filter, sortField, ascending, page, size);
     }
 
     @GetMapping(

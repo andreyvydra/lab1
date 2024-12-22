@@ -9,10 +9,15 @@ import itmo.is.lab1.services.common.requests.GeneralEntityRequest;
 import itmo.is.lab1.services.common.responses.GeneralEntityResponse;
 import itmo.is.lab1.services.common.responses.GeneralMessageResponse;
 import itmo.is.lab1.services.user.UserService;
+import itmo.is.lab1.specification.GeneralSpecification;
+import itmo.is.lab1.specification.PaginatedResponse;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,10 +31,27 @@ public abstract class GeneralService<T extends GeneralEntityRequest, R extends G
     @Autowired
     protected UserService userService;
 
-    public List<R> findAll() {
-        return repository.findAll()
-                .stream().map(this::buildResponse)
+    public PaginatedResponse<R> findAll(String filter, String sortField, Boolean ascending, Integer page, Integer size) {
+        PageRequest pageRequest = PageRequest.of(
+                page,
+                size,
+                ascending ? Sort.by(sortField).ascending() : Sort.by(sortField).descending()
+        );
+
+        Page<E> resultPage = repository.findAll(
+                GeneralSpecification.filterByMultipleFields(filter), pageRequest);
+
+        List<R> content = resultPage.getContent().stream()
+                .map(this::buildResponse)
                 .collect(Collectors.toList());
+
+        return new PaginatedResponse<>(
+                content,
+                resultPage.getTotalPages(),
+                resultPage.getTotalElements(),
+                resultPage.getNumber(),
+                resultPage.getSize()
+        );
     }
 
     protected abstract R buildResponse(E element);
