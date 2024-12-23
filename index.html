@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@5.1.2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.5.2/dist/sockjs.min.js"></script>
+</head>
+<body>
+<h2>WebSocket Example</h2>
+<script>
+    // Создаем соединение с WebSocket через SockJS
+    var socket = new SockJS('http://localhost:8081/ws'); // URL вашего эндпоинта
+
+    var stompClient = Stomp.over(socket);
+
+    // Подключаемся
+    stompClient.connect({}, function (frame) {
+      console.log('Connected: ' + frame);
+
+      // Подписываемся на топик
+      stompClient.subscribe('/topic/entities', function (message) {
+        alert("Получено сообщение: " + message.body); // Пример обработки полученного сообщения
+      });
+    });
+
+</script>
+</body>
+</html>

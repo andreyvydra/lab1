@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +36,8 @@ public abstract class GeneralService<
     protected P repository;
     @Autowired
     protected UserService userService;
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
 
     public PaginatedResponse<R> findAll(String filter, String sortField, Boolean ascending, Integer page, Integer size) {
         PageRequest pageRequest = PageRequest.of(
@@ -73,6 +76,7 @@ public abstract class GeneralService<
     public GeneralMessageResponse deleteById(@NotNull Long id) {
         E entity = getOwnedEntityById(id);
         repository.delete(entity);
+        messagingTemplate.convertAndSend("/topic/entities", id);
         return new GeneralMessageResponse()
                 .setMessage("Объект успешно удалён.");
     }
@@ -81,18 +85,17 @@ public abstract class GeneralService<
     public R create(@NotNull T request) {
         E entity = buildEntity(request);
         repository.save(entity);
+        messagingTemplate.convertAndSend("/topic/entities", buildResponse(entity));
         return buildResponse(entity);
     }
 
     protected abstract E buildEntity(T request);
 
     public R updateById(@NotNull Long id, @NotNull T request) {
-        System.out.println(123);
         E entity = getOwnedEntityById(id);
-        System.out.println(entity);
         entity.setValues(request, entity.getUser());
-        System.out.println(entity);
         repository.save(entity);
+        messagingTemplate.convertAndSend("/topic/entities", buildResponse(entity));
         return buildResponse(entity);
     }
 

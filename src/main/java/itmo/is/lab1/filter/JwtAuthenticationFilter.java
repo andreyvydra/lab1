@@ -1,4 +1,4 @@
-package itmo.is.lab1.security;
+package itmo.is.lab1.filter;
 
 import itmo.is.lab1.models.user.User;
 import itmo.is.lab1.services.jwt.JwtService;
