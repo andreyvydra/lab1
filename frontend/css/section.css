@@ -1,0 +1,108 @@
+section {
+    background: url("../static/img/gold.webp") center center/128px 128px space,
+    url("../static/img/stone.png") center center/100px 100px repeat;
+    min-height: 100%;
+}
+
+section {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.first-article {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    background-repeat: repeat;
+    padding: 10px;
+}
+
+.table-article {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    background-repeat: repeat;
+    padding: 10px;
+    min-width: 40%;
+}
+
+.block {
+    border-radius: 10px;
+    margin: 20px;
+    backdrop-filter: blur(10px);
+}
+
+.input {
+    min-width: 240px;
+    max-width: 480px;
+    min-height: 150px;
+    border: cornflowerblue 3px solid;
+}
+
+.default-input {
+    background: grey;
+    outline-offset: 1px;
+}
+
+.label {
+    color: rgb(124,185,232);
+}
+
+.input > form {
+    padding: 10px;
+}
+
+.input > form > * {
+    margin-bottom: 15px;
+}
+
+.submit-button {
+    background-color: dimgrey;
+}
+
+
+.results {
+    display: flex;
+    flex-direction: column;
+    min-width: 300px;
+    min-height: 400px;
+    width: 100%;
+    border: palegreen 3px solid;
+    text-align: center;
+}
+
+.table-results {
+    font-size: 14px;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+th, td {
+    border: white 1px solid;
+}
+
+th {
+    background-color: dimgrey;
+}
+
+td {
+    padding: 5px;
+    background-color: grey;
+}
+
+.pagination-button {
+    background-color: grey;
+}
+
+.button-is-selected {
+    background: #595959 !important;
+}
+
+#pagination-button-container > span, button {
+    padding: 5px;
+    margin: 10px;
+}

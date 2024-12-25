@@ -3,7 +3,11 @@ package itmo.is.lab1.services.user;
 import itmo.is.lab1.models.user.User;
 import itmo.is.lab1.models.user.enums.Role;
 import itmo.is.lab1.repositories.UserRepository;
+import itmo.is.lab1.services.common.errors.BadRequestException;
+import itmo.is.lab1.services.common.errors.GeneralException;
+import itmo.is.lab1.services.common.responses.GeneralMessageResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -20,7 +24,7 @@ public class UserService {
 
     public User create(User user) {
         if (repository.existsByUsername(user.getUsername())) {
-            throw new RuntimeException("Пользователь с таким именем уже существует");
+            throw new GeneralException(HttpStatus.BAD_REQUEST, "Пользователь с таким именем уже существует");
         }
 
         return save(user);

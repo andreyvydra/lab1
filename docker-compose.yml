@@ -26,6 +26,18 @@ services:
     volumes:
       - dragons-data:/var/lib/postgresql/data
 
+  front:
+    build:
+      context: .
+      dockerfile: Dockerfile-nginx
+    hostname: 'frontend'
+    ports:
+      - '80:80'
+    networks:
+      - web-network
+    depends_on:
+      - spring-web
+
 networks:
   web-network:
     driver: bridge
