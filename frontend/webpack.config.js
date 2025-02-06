@@ -18,6 +18,13 @@ module.exports = {
         rules: [
             { test: /\.mp3$/, loader: "file-loader"},
             { test: /\.css$/, use: [ 'style-loader', 'css-loader' ] },
+            {
+                test: /\.(png|jpg|jpeg|webp|gif|svg)$/,
+                type: 'asset/resource',
+                generator: {
+                    filename: 'static/img/[name][ext]',
+                },
+            },
         ]
     },
     plugins: [

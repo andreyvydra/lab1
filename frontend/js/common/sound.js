@@ -6,7 +6,8 @@ class Sound {
         xInputs: $(".but"),
         rInputs: document.getElementsByClassName("r"),
         submit: document.getElementsByClassName("submit-button"),
-        paginationButtons: document.getElementsByClassName("pagination-button")
+        paginationButtons: document.getElementsByClassName("pagination-button"),
+        pageSizeButtons: document.getElementById("page-size")
     }
     sound = new Audio(soundFile);
 
@@ -21,8 +22,12 @@ class Sound {
 
     addEventListeners() {
         for (let [key, value] of Object.entries(this.inputs)) {
-            for (let input of value) {
-                input.addEventListener("click", this.playSound.bind(this));
+            if (key === "pageSizeButtons") {
+                value.addEventListener("change", this.playSound.bind(this));
+            } else {
+                for (let input of value) {
+                    input.addEventListener("click", this.playSound.bind(this));
+                }
             }
         }
     }

@@ -12,7 +12,9 @@ header {
     justify-content: center;
 }
 
+
 .diamond {
+    background: url('../static/img/diamond.webp') center center/64px 64px;
     width: 64px;
     height: 64px;
 }

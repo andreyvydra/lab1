@@ -3,13 +3,14 @@ import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
 import * as c from './common/constants'
 import * as u from './common/utils'
-import {paginationTable} from './common/pagination'
+import {PaginationTable} from './common/pagination'
 import '../css/main.css';
 import 'simple-notify/dist/simple-notify.css'
 import {getAuthHeader} from "./common/utils";
 import {errorNotifies} from "./common/error";
 
 $(document).ready(function() {
+	new PaginationTable("/location");
 
 	var socket = new SockJS(c.baseUrl + '/ws', null, {transports: ['websocket']});
 	var stompClient = Stomp.over(socket);

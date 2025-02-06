@@ -96,6 +96,12 @@ td {
 
 .pagination-button {
     background-color: grey;
+    padding: 5px;
+    margin: 10px;
+}
+
+#page-size {
+    background-color: grey;
 }
 
 .button-is-selected {

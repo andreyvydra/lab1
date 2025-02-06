@@ -4,16 +4,24 @@ import * as c from './constants';
 import {sound} from "./sound";
 import * as u from "./utils";
 
-class PaginationTable {
-    constructor() {
+export class PaginationTable {
+    constructor(url) {
         this.table = $("#pagination-table-body");
-        this.buttonsContainer = $("#pagination-button-container");
+        this.paginationButtonsContainer = $("#pagination-button-container");
         this.buttons = $(".pagination-button");
+        this.pageSizeButton = $("#page-size");
 
         this.addButtonListeners();
         let page = 0;
+        this.url = url;
         this.changeSelectedButton(page);
         this.doRequest(page);
+
+        window.sessionStorage.setItem("page", "0");
+        window.sessionStorage.setItem("size", "10");
+
+        this.pageSizeButton.on("change", (event) => this.changePageSize(event));
+
     }
 
     addButtonListeners() {
@@ -33,16 +41,26 @@ class PaginationTable {
         event.preventDefault();
         let pageNumber = parseInt($(event.currentTarget).text()) - 1;
         window.sessionStorage.setItem("page", pageNumber.toString());
-        this.doRequest(pageNumber);
+        let size = parseInt(window.sessionStorage.getItem("size"));
+        this.doRequest(pageNumber, size);
         this.changeSelectedButton(pageNumber);
     }
 
-    doRequest(pageNumber) {
+    changePageSize(event) {
+        event.preventDefault();
+        let pageSize = parseInt(this.pageSizeButton.val());
+        console.log(pageSize)
+        window.sessionStorage.setItem("size", pageSize.toString());
+        let pageNumber = parseInt(window.sessionStorage.getItem("page"));
+        this.doRequest(pageNumber, pageSize);
+    }
+
+    doRequest(pageNumber, pageSize) {
         $.ajax({
-            url: c.baseUrl + c.apiUrl + '/location',
+            url: c.baseUrl + c.apiUrl + this.url,
             type: "GET",
             headers: u.getAuthHeader(),
-            data: {"page": pageNumber},
+            data: {"page": pageNumber, "size": pageSize},
             success: (response) => {
                 this.updateBodyTable(response);
                 this.updateButtons(response);
@@ -115,15 +133,15 @@ class PaginationTable {
     }
 
     deleteButtons() {
-        this.buttonsContainer.empty();
+        this.paginationButtonsContainer.empty();
     }
 
     addButton(pageNumber) {
-        this.buttonsContainer.append(`<button class='pagination-button'>${pageNumber}</button>`);
+        this.paginationButtonsContainer.append(`<button class='pagination-button'>${pageNumber}</button>`);
     }
 
     addSpan() {
-        this.buttonsContainer.append("<span>...</span>");
+        this.paginationButtonsContainer.append("<span>...</span>");
     }
 
     addBodyTable(values) {
@@ -138,4 +156,3 @@ class PaginationTable {
     }
 }
 
-export const paginationTable = new PaginationTable();

@@ -7,11 +7,11 @@
 <body>
     <div class="wrapper">
         <header>
-            <img class="diamond" src="../static/img/diamond.webp" alt="Алмаз">
+            <div class="diamond"></div>
             <div class="header-info">
                 <h2>Список объектов</h2>
             </div>
-            <img class="diamond" src="../static/img/diamond.webp" alt="Алмаз">
+            <div class="diamond"></div>
         </header>
         <section>
             <article class="table-article">
@@ -31,6 +31,15 @@
                     </table>
                     <div id="pagination-button-container">
 
+                    </div>
+                    <div id="page-size-button-container">
+                        <label for="page-size">Размер страницы: </label>
+                        <select id="page-size">
+                            <option value="5">5</option>
+                            <option value="10" selected>10</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                        </select>
                     </div>
                 </div>
             </article>
