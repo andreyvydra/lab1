@@ -4,10 +4,17 @@ import $ from "jquery";
 import * as c from './common/constants'
 import * as u from './common/utils'
 import {errorNotifies} from './common/error'
+import {redirectIfAuthenticated} from "./common/utils";
+import ErrorNotify from "./common/notifications/errorNotify";
 
+
+$(document).ready(function() {
+    redirectIfAuthenticated();
+})
 
 // Функция для авторизации пользователя
 window.registerUser = function(event) {
+
     event.preventDefault();
     const username = $('#username').val();
     const password = $('#password').val();
@@ -18,9 +25,16 @@ window.registerUser = function(event) {
         contentType: 'application/json',
         data: JSON.stringify({ username, password }),
         success: function(response) {
-            u.setTokenToCookie(response.token);
+            if (response.token === "") {
+                new ErrorNotify(
+                    response.message,
+                    ""
+                )
+            }
             console.log(response)
-            u.redirect('object-list.html')
+            u.setTokenToCookie(response.token);
+            alert(response.token);
+            redirectIfAuthenticated();
         },
         error: function(error) {
             errorNotifies(error);

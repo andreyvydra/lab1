@@ -3,4 +3,5 @@ service_up:
 	docker compose up -d --no-deps --build spring-web front
 
 front:
+	$(MAKE) -C frontend all
 	docker compose up -d --no-deps --build front

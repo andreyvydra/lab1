@@ -3,6 +3,7 @@ import { errorNotifies } from './error';
 import * as c from './constants';
 import {sound} from "./sound";
 import * as u from "./utils";
+import {redirectIfAuthenticated} from "./utils";
 
 export class PaginationTable {
     constructor(url) {
@@ -69,6 +70,7 @@ export class PaginationTable {
                 this.changeSelectedButton(response.currentPage);
             },
             error: (xhr) => {
+                if (xhr.status === 403 || xhr.status === 401) redirectIfAuthenticated();
                 errorNotifies(xhr);
             },
         });
@@ -145,14 +147,16 @@ export class PaginationTable {
     }
 
     addBodyTable(values) {
-        this.table.append(`
-            <tr>
-                <td>${values.id}</td>
-                <td>${values.name}</td>
-                <td>${values.x}</td>
-                <td>${values.y}</td>
-            </tr>
-        `);
+        const row = $('<tr>');
+
+        for (const key in values) {
+            if (values.hasOwnProperty(key)) {
+                const cell = $('<td>').text(values[key]);
+                row.append(cell);
+            }
+        }
+
+        this.table.append(row);
     }
 }
 

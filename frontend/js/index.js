@@ -1,8 +1,8 @@
 import '../css/main.css';
-import {setDiamondsImages} from './common/common.js';
 import 'simple-notify/dist/simple-notify.css';
 import $ from "jquery";
+import {redirectIfAuthenticated} from "./common/utils";
 
 $(document).ready(function() {
-    // setDiamondsImages();
+    redirectIfAuthenticated();
 })

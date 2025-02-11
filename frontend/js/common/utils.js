@@ -7,10 +7,52 @@ export function setTokenToCookie(token) {
     document.cookie='access_token='+token;
 }
 
+const redirectExceptions = [
+    { from: 'register.html', to: 'login.html' },
+    { from: 'login.html', to: 'login.html' },
+    { from: 'object-list.html', to: 'object-list.html'}
+
+];
+
 export function redirect(path) {
-    document.location.href = path;
+    const currentUrl = document.location.href;
+
+    for (const exception of redirectExceptions) {
+        if (currentUrl.includes(exception.from) && path.includes(exception.to)) {
+            return;
+        }
+    }
+
+    const absolutePath = new URL(path, document.location.origin).href;
+    if (absolutePath !== document.location.href) document.location.href = absolutePath;
 }
 
 export function getAuthHeader() {
     return { 'Authorization': 'Bearer ' + getCookie("access_token") }
+}
+
+export function redirectIfAuthenticated() {
+    let token = getCookie("access_token");
+
+    if (token !== undefined && getCookie("access_token").length) {
+        redirect("object-list.html")
+    } else {
+        redirect("login.html")
+    }
+}
+
+export function decodeJWT(token) {
+    try {
+        // Разделяем токен на части
+        const [headerBase64, payloadBase64, signature] = token.split('.');
+
+        // Декодируем Base64 части Header и Payload
+        const header = JSON.parse(atob(headerBase64));
+        const payload = JSON.parse(atob(payloadBase64));
+
+        return { header, payload, signature };
+    } catch (error) {
+        console.error('Ошибка при декодировании токена:', error);
+        return null;
+    }
 }

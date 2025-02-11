@@ -7,11 +7,14 @@
 <body>
     <div class="wrapper">
         <header>
-            <div class="diamond"></div>
-            <div class="header-info">
-                <h2>Список объектов</h2>
+            <div class="center-container">
+                <div class="diamond"></div>
+                <div class="header-info">
+                    <h2>Список объектов</h2>
+                </div>
+                <div class="diamond"></div>
             </div>
-            <div class="diamond"></div>
+            <a id="login">Войти</a>
         </header>
         <section>
             <article class="table-article">
@@ -20,9 +23,11 @@
                         <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Имя</th>
+                            <th>Изменяемый</th>
+                            <th>Пользователь</th>
                             <th>X</th>
                             <th>Y</th>
+                            <th>Название</th>
                         </tr>
                         </thead>
                         <tbody id="pagination-table-body">
@@ -45,6 +50,5 @@
             </article>
         </section>
     </div>
-    <script src="objects.js"></script>
 </body>
 </html>

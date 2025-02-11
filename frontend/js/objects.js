@@ -6,10 +6,21 @@ import * as u from './common/utils'
 import {PaginationTable} from './common/pagination'
 import '../css/main.css';
 import 'simple-notify/dist/simple-notify.css'
-import {getAuthHeader} from "./common/utils";
-import {errorNotifies} from "./common/error";
+import {decodeJWT, getCookie, redirectIfAuthenticated, setTokenToCookie} from "./common/utils";
+
+document.addEventListener('DOMContentLoaded', function() {
+	redirectIfAuthenticated();
+});
 
 $(document).ready(function() {
+	const decoded  = decodeJWT(getCookie("access_token"));
+
+	$("#login").text(decoded.payload.sub);
+	$('#login').click(function () {
+		setTokenToCookie(''); // Удаляем токен
+		window.location.href = '/login.html'; // Перенаправляем на страницу входа
+	});
+
 	new PaginationTable("/location");
 
 	var socket = new SockJS(c.baseUrl + '/ws', null, {transports: ['websocket']});
@@ -29,6 +40,6 @@ $(document).ready(function() {
 		});
 	}
 
-	connect()
+	connect();
 
 })
