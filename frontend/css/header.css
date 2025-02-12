@@ -1,15 +1,23 @@
-.header-info > h2 {
-    font-size: 24pt;
-    font-style: italic;
-}
-
 header {
     min-height: 100px;
     min-width: 100%;
     background: url("../static/img/dirt.jpg") center center/100px 100px repeat;
     display: flex;
     align-items: center; /* Вертикальное выравнивание */
-    justify-content: center; /* Центрирование по горизонтали */
+    justify-content: space-between; /* Распределение пространства между элементами */
+}
+
+.center-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-grow: 1; /* Занимает всё доступное пространство */
+    justify-content: center; /* Центрирует содержимое по горизонтали */
+}
+
+.login-container {
+    margin-left: auto; /* Сдвигает контейнер с кнопкой вправо */
+    flex-shrink: 0; /* Не позволяет сжиматься */
 }
 
 .diamond {
@@ -18,14 +26,44 @@ header {
     height: 64px;
 }
 
-.center-container {
+nav {
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 10px;
+}
+
+nav ul {
+    list-style: none;
     display: flex;
-    align-items: center;
     justify-content: center;
-    flex-grow: 1; /* Занимает всё доступное пространство */
+    gap: 20px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: whitesmoke;
+    font-size: 16pt;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+nav ul li a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+nav ul li a.active {
+    background-color: rgba(255, 255, 255, 0.2);
+    font-weight: bold;
 }
 
 #login {
-    margin-left: auto; /* Сдвигает элемент вправо */
-    padding-right: 20px; /* Добавляет отступ от правого края */
+    text-decoration: none;
+    font-size: 16pt;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+#login:hover {
+    background-color: rgba(255, 255, 255, 0.1);
 }

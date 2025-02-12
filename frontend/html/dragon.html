@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Список объектов</title>
+</head>
+<body>
+<div class="wrapper">
+  <header>
+    <div class="center-container">
+      <div class="diamond"></div>
+      <div class="header-info">
+        <h2>Драконы</h2>
+      </div>
+      <div class="diamond"></div>
+    </div>
+    <div class="login-container">
+      <a id="login" href="./login.html">Войти</a>
+    </div>
+  </header>
+  <nav>
+    <ul>
+      <li><a href="./location.html">Локации</a></li>
+      <li><a href="./person.html">Персонажи</a></li>
+      <li><a href="./dragon.html" class="active">Драконы</a></li>
+      <li><a href="./dragon_cave.html">Пещеры драконов</a></li>
+      <li><a href="./dragon_head.html">Головы драконов</a></li>
+      <li><a href="./coordinates.html">Координаты</a></li>
+    </ul>
+  </nav>
+  <section>
+    <article class="input-article">
+      <div class="block input">
+        <form id="form">
+          <div class="changeable-input">
+            Изменяемый:
+            <label>
+              <input name="is-changeable-input" type="checkbox">
+              <span>Да</span>
+            </label>
+          </div>
+          <div class="text-input">
+            <label>Имя:
+              <input type="text" id="name-input" required>
+            </label>
+          </div>
+          <div class="choice-input">
+            <label>Координаты:</label>
+            <div id="coordinates-list-container" class="scrollable-list">
+              <div id="coordinates-list">
+
+              </div>
+              <div id="coordinates-loading-indicator" style="display: none;">Загрузка...</div>
+            </div>
+          </div>
+          <input type="hidden" id="coordinates-input" required>
+
+          <div class="choice-input">
+            <label>Убийца:</label>
+            <div id="killer-list-container" class="scrollable-list">
+              <div id="killer-list">
+
+              </div>
+              <div id="killer-loading-indicator" style="display: none;">Загрузка...</div>
+            </div>
+          </div>
+          <input type="hidden" id="killer-input" required>
+
+          <div class="choice-input">
+            <label>Пещера:</label>
+            <div id="cave-list-container" class="scrollable-list">
+              <div id="cave-list">
+
+              </div>
+              <div id="cave-loading-indicator" style="display: none;">Загрузка...</div>
+            </div>
+          </div>
+          <input type="hidden" id="cave-input" required>
+
+
+
+          <div class="text-input">
+            <label>Возраст:
+              <input type="number" id="age-input" pattern="^-?\d*([.,]{1}\d{0,6})?$" required>
+            </label>
+          </div>
+
+          <div class="changeable-input">
+            Говорящий:
+            <label>
+              <input name="speaking-input" type="checkbox">
+              <span>Да</span>
+            </label>
+          </div>
+
+          <div class="choice-input">
+            <label>Цвет:
+              <select id="color-input" required>
+                <option value="GREEN">Зеленый</option>
+                <option value="RED">Красный</option>
+                <option value="BLACK">Черный</option>
+                <option value="YELLOW">Желтый</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="choice-input">
+            <label>Вид:
+              <select id="dragon-character-input" required>
+                <option value="WISE">Мудрый</option>
+                <option value="EVIL">Злой</option>
+                <option value="GOOD">Добрый</option>
+                <option value="CHAOTIC">Хаотичный</option>
+                <option value="CHAOTIC_EVIL">Хаотично-злой</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="choice-input">
+            <label>Голова:</label>
+            <div id="head-list-container" class="scrollable-list">
+              <div id="head-list">
+
+              </div>
+              <div id="head-loading-indicator" style="display: none;">Загрузка...</div>
+            </div>
+          </div>
+          <input type="hidden" id="head-input" required>
+
+          <input class="submit-button" type="submit" value="Добавить">
+        </form>
+      </div>
+    </article>
+    <article class="table-article">
+      <div class="block results">
+        <table class="table-results">
+          <thead>
+          <tr>
+            <th>ID</th>
+            <th>Изменяемый</th>
+            <th>Создатель</th>
+            <th>Имя</th>
+            <th>Координаты</th>
+            <th>Дата создания</th>
+            <th>Убийца</th>
+            <th>Пещера</th>
+            <th>Возраст</th>
+            <th>Говорящий</th>
+            <th>Цвет</th>
+            <th>Вид</th>
+            <th>Голова</th>
+          </tr>
+          </thead>
+          <tbody id="pagination-table-body">
+
+          </tbody>
+        </table>
+        <div id="pagination-button-container">
+
+        </div>
+        <div id="page-size-button-container">
+          <label for="page-size">Размер страницы: </label>
+          <select id="page-size">
+            <option value="5">5</option>
+            <option value="10" selected>10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+          </select>
+        </div>
+      </div>
+    </article>
+  </section>
+</div>
+</body>
+</html>

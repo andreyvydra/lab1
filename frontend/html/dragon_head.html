@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Список объектов</title>
+</head>
+<body>
+<div class="wrapper">
+    <header>
+        <div class="center-container">
+            <div class="diamond"></div>
+            <div class="header-info">
+                <h2>Головы драконов</h2>
+            </div>
+            <div class="diamond"></div>
+        </div>
+        <div class="login-container">
+            <a id="login" href="./login.html">Войти</a>
+        </div>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="./location.html">Локации</a></li>
+            <li><a href="./person.html">Персонажи</a></li>
+            <li><a href="./dragon.html" >Драконы</a></li>
+            <li><a href="./dragon_cave.html">Пещеры драконов</a></li>
+            <li><a href="./dragon_head.html" class="active">Головы драконов</a></li>
+            <li><a href="./coordinates.html">Координаты</a></li>
+        </ul>
+    </nav>
+    <section>
+        <article class="input-article">
+            <div class="block input">
+                <form id="form">
+                    <div class="changeable-input">
+                        Изменяемый:
+                        <label>
+                            <input name="is-changeable-input" type="checkbox">
+                            <span>Да</span>
+                        </label>
+                    </div>
+                    <div class="text-input">
+                        <label>Размер:
+                            <input type="number" id="size-input" pattern="^-?\d*([.,]{1}\d{0,6})?$" required>
+                        </label>
+                    </div>
+                    <div class="text-input">
+                        <label>Кол-во глаз:
+                            <input type="number" id="eyes-count-input" pattern="^-?\d*([.,]{1}\d{0,6})?$" required>
+                        </label>
+                    </div>
+                    <input class="submit-button" type="submit" value="Добавить">
+                </form>
+            </div>
+        </article>
+        <article class="table-article">
+            <div class="block results">
+                <table class="table-results">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Изменяемый</th>
+                        <th>Создатель</th>
+                        <th>Размер</th>
+                        <th>Кол-во глаз</th>
+                    </tr>
+                    </thead>
+                    <tbody id="pagination-table-body">
+
+                    </tbody>
+                </table>
+                <div id="pagination-button-container">
+
+                </div>
+                <div id="page-size-button-container">
+                    <label for="page-size">Размер страницы: </label>
+                    <select id="page-size">
+                        <option value="5">5</option>
+                        <option value="10" selected>10</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                    </select>
+                </div>
+            </div>
+        </article>
+    </section>
+</div>
+</body>
+</html>

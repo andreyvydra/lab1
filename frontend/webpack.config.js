@@ -7,7 +7,12 @@ module.exports = {
         index: './js/index.js',
         login: './js/login.js',
         register: './js/register.js',
-        objects: './js/objects.js'
+        location: './js/location.js',
+        person: './js/person.js',
+        dragon: './js/dragon.js',
+        dragonCave: './js/dragonCave.js',
+        dragonHead: './js/dragonHead.js',
+        coordinates: './js/coordinates.js'
     },
     output: {
         filename: '[name].js',
@@ -44,9 +49,34 @@ module.exports = {
             chunks: ['login'],
         }),
         new HtmlWebpackPlugin({
-            template: './html/object-list.html',
-            filename: 'object-list.html',
-            chunks: ['objects'],
+            template: './html/location.html',
+            filename: 'location.html',
+            chunks: ['location'],
+        }),
+        new HtmlWebpackPlugin({
+            template: './html/person.html',
+            filename: 'person.html',
+            chunks: ['person'],
+        }),
+        new HtmlWebpackPlugin({
+            template: './html/dragon.html',
+            filename: 'dragon.html',
+            chunks: ['dragon'],
+        }),
+        new HtmlWebpackPlugin({
+            template: './html/dragon_cave.html',
+            filename: 'dragon_cave.html',
+            chunks: ['dragonCave'],
+        }),
+        new HtmlWebpackPlugin({
+            template: './html/dragon_head.html',
+            filename: 'dragon_head.html',
+            chunks: ['dragonHead'],
+        }),
+        new HtmlWebpackPlugin({
+            template: './html/coordinates.html',
+            filename: 'coordinates.html',
+            chunks: ['coordinates'],
         })
     ]
 }

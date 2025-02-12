@@ -34,7 +34,7 @@ public class GeneralController<T extends GeneralEntityRequest,
     @GetMapping(produces = APPLICATION_JSON_VALUE)
     public @NotNull PaginatedResponse<R> findAll(
             @RequestParam(required = false, defaultValue = "") String filter,
-            @RequestParam(required = false, defaultValue = "name") String sortField,
+            @RequestParam(required = false, defaultValue = "id") String sortField,
             @RequestParam(required = false, defaultValue = "true") @NotNull Boolean ascending,
             @RequestParam(required = false, defaultValue = "0") @Min(value = 0) Integer page,
             @RequestParam(required = false, defaultValue = "10") @Min(value = 1) @Max(value = 50) Integer size

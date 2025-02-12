@@ -27,5 +27,10 @@ export function errorNotifies(xhr) {
             "Ошибка доступа",
             "Вы не авторизованы в системе!"
         )
+    } else {
+        new ErrorNotify(
+            "Ошибка",
+            xhr.status + " " + xhr.responseText
+        )
     }
 }

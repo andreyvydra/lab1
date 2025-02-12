@@ -9,10 +9,17 @@ export function setTokenToCookie(token) {
 
 const redirectExceptions = [
     { from: 'register.html', to: 'login.html' },
-    { from: 'login.html', to: 'login.html' },
-    { from: 'object-list.html', to: 'object-list.html'}
-
+    { from: 'login.html', to: 'login.html' }
 ];
+
+const servicePages = [
+    'location.html',
+    'person.html',
+    'dragon.html',
+    'dragon_head.html',
+    'dragon_cave.html',
+    'coordinates.html'
+]
 
 export function redirect(path) {
     const currentUrl = document.location.href;
@@ -33,10 +40,10 @@ export function getAuthHeader() {
 
 export function redirectIfAuthenticated() {
     let token = getCookie("access_token");
-
-    if (token !== undefined && getCookie("access_token").length) {
-        redirect("object-list.html")
-    } else {
+    const currentUrl = document.location.href;
+    if (token !== undefined && token.length && !servicePages.some(x => currentUrl.includes(x)) ) {
+        redirect("dragon.html")
+    } else if ((token === undefined || !token.length) && servicePages.some(x => currentUrl.includes(x))) {
         redirect("login.html")
     }
 }

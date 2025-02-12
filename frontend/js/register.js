@@ -31,9 +31,7 @@ window.registerUser = function(event) {
                     ""
                 )
             }
-            console.log(response)
             u.setTokenToCookie(response.token);
-            alert(response.token);
             redirectIfAuthenticated();
         },
         error: function(error) {

@@ -2,7 +2,8 @@
 export const autoClose = true;
 export const timeout = 5000;
 export const errorStatus = "error";
-export const warningStatus = "warning"
+export const warningStatus = "warning";
+export const infoStatus = "info";
 
 // Constants for pagination
 export const minPageCount = 5;
