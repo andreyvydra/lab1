@@ -102,6 +102,11 @@ module.exports = {
             template: './html/forms/location_form.html',
             filename: './forms/location_form.html',
             chunks: []
+        }),
+        new HtmlWebpackPlugin({
+            template: './html/forms/person_form.html',
+            filename: './forms/person_form.html',
+            chunks: []
         })
     ]
 }

@@ -1,90 +1,61 @@
 import $ from "jquery";
-import {addObject, pagination} from "./objects";
-import {getAuthHeader, redirectIfAuthenticated} from "./common/utils";
-import * as c from "./common/constants";
-import ErrorNotify from "./common/notifications/errorNotify";
-import '../css/scrolls.css'
+import {addObject, putObject} from "./objects";
+import {loadForm, redirectIfAuthenticated} from "./common/utils";
+import './common/common';
+import './common/modal';
+import {form, setValues} from "./forms/personForm";
+import {PaginationTable} from "./common/pagination";
+import {common} from "./common/common";
 
-let currentPage = 0;
-let isLoading = false;
-let hasMore = true;
+const formPath = './forms/person_form.html'
+
+class PersonPaginationTable extends PaginationTable {
+    handleUpdate(id) {
+        loadForm(formPath, 'update-modal-content',
+            'update-person-form', function (formId) {
+                const modal = $('#update-modal');
+                modal.css('display', 'block');
+                $('#update-person-form').data('id', id);
+
+                $('#update-person-form').on('submit', function (event) {
+                    event.preventDefault();
+                    const formData = getFormData(this);
+                    putObject("/person", $(this).data('id'), formData);
+                });
+
+                form('update-person-form');
+                setValues(id);
+            });
+    }
+}
+
+function getFormData(form) {
+    return  {
+        isChangeable: $(form).find('input[name="is-changeable-input"]').is(':checked'),
+        name: $(form).find('#name-input').val(),
+        eyeColor: $(form).find('#color-eyes-input').val(),
+        hairColor: $(form).find('#color-hair-input').val(),
+        nationality: $(form).find('#nationality-input').val(),
+        location: $(form).find('#location-input').val(),
+        passportID: $(form).find('#passport-input').val()
+    };
+}
 
 
-$(document).ready(function() {
+$(document).ready(function () {
     redirectIfAuthenticated();
-    pagination("/person");
 
-    loadLocations();
+    // Table and it's functions
+    const table = new PersonPaginationTable("/person");
+    common(table);
 
-    $('#location-list-container').on('scroll', function () {
-        const container = $(this);
-        if (container.scrollTop() + container.innerHeight() >= container[0].scrollHeight && !isLoading && hasMore) {
-            loadLocations(currentPage + 1);
-        }
-    });
+    loadForm(formPath, 'input-article', 'person-form', null);
+    form('person-form');
 
-    $('#location-list').on('click', 'div', function () {
-        $('#location-list div').removeClass('selected');
-        $(this).addClass('selected');
-        $('#location-input').val($(this).data('id'));
-    });
-
-    $('#form').on('submit', function (event) {
+    $(`#person-form`).on('submit', function (event) {
         event.preventDefault();
-
-        const formData = {
-            isChangeable: $('#form input[name="is-changeable-input"]').is(':checked'),
-            name: $('#name-input').val(),
-            eyeColor: $('#color-eyes-input').val(),
-            hairColor: $('#color-hair-input').val(),
-            nationality: $('#nationality-input').val(),
-            location: $('#location-input').val(),
-            passportID: $('#passport-input').val()
-        };
-
-        addObject("/person", formData)
+        const formData = getFormData(this);
+        addObject("/person", formData);
     });
 
 })
-
-function loadLocations(page = 0) {
-    if (isLoading) return;
-    isLoading = true;
-    $('#location-loading-indicator').show();
-
-    $.ajax({
-        url: c.baseUrl + c.apiUrl + '/location',
-        type: 'GET',
-        data: {
-            page: page,
-            size: 10
-        },
-        headers: getAuthHeader(),
-        success: function (response) {
-            if (response.content.length > 0) {
-                updateLocationList(response.content);
-                currentPage = page;
-            } else {
-                hasMore = false;
-            }
-        },
-        error: function (xhr, status, error) {
-           new ErrorNotify('Ошибка при загрузке локаций', error);
-        },
-        complete: function () {
-            isLoading = false;
-            $('#location-loading-indicator').hide();
-        }
-    });
-}
-
-function updateLocationList(locations) {
-    const locationList = $('#location-list');
-    locations.forEach(location => {
-        locationList.append(`
-            <div data-id="${location.id}">
-                ${location.name}
-            </div>
-        `);
-    });
-}

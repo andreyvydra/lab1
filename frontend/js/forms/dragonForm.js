@@ -44,6 +44,43 @@ export function setValues(id) {
 
             formWidget.find('.submit-button').data('id', id);
             updateSelectedItems(formWidget, response);
+
+            formWidget.find('#coordinates-list-container').off('scroll');
+            formWidget.find('#coordinates-list-container').on('scroll', function () {
+                const container = $(this);
+                if (container.scrollTop() + container.innerHeight() >= container[0].scrollHeight - 10 && !isCoordinatesLoading && hasMoreCoordinates) {
+                    loadCoordinates(currentCoordinatesPage + 1);
+                    updateSelectedItems(formWidget, response);
+                }
+            });
+
+            formWidget.find('#killer-list-container').off('scroll');
+            formWidget.find('#killer-list-container').on('scroll', function () {
+                const container = $(this);
+                if (container.scrollTop() + container.innerHeight() >= container[0].scrollHeight - 10 && !isKillerLoading && hasMoreKiller) {
+                    loadKillers(currentKillerPage + 1);
+                    updateSelectedItems(formWidget, response);
+                }
+            });
+
+            formWidget.find('#cave-list-container').off('scroll');
+            formWidget.find('#cave-list-container').on('scroll', function () {
+                const container = $(this);
+                if (container.scrollTop() + container.innerHeight() >= container[0].scrollHeight - 10 && !isCaveLoading && hasMoreCave) {
+                    loadCaves(currentCavePage + 1);
+                    updateSelectedItems(formWidget, response);
+                }
+            });
+
+            formWidget.find('#head-list-container').off('scroll');
+            formWidget.find('#head-list-container').on('scroll', function () {
+                const container = $(this);
+                if (container.scrollTop() + container.innerHeight() >= container[0].scrollHeight - 10 && !isHeadLoading && hasMoreHead) {
+                    loadHeads(currentHeadPage + 1);
+                    updateSelectedItems(formWidget, response);
+                }
+            });
+
         },
         error: (xhr) => {
             if (xhr.status === 403 || xhr.status === 401) redirectIfAuthenticated();
@@ -55,20 +92,16 @@ export function setValues(id) {
 function updateSelectedItems(formWidget, response) {
     console.log(response);
 
-    // formWidget.find('#coordinates-list div').removeClass('selected');
-    console.log(formWidget.find(`#coordinates-list div[data-id="${response.coordinates}"]`))
+    formWidget.find('#coordinates-list div').removeClass('selected');
     formWidget.find(`#coordinates-list div[data-id="${response.coordinates}"]`).addClass('selected');
 
-    // formWidget.find('#killer-list div').removeClass('selected');
-    console.log(formWidget.find(`#killer-list div[data-id="${response.killer}"]`))
+    formWidget.find('#killer-list div').removeClass('selected');
     formWidget.find(`#killer-list div[data-id="${response.killer}"]`).addClass('selected');
 
-    // formWidget.find('#cave-list div').removeClass('selected');
-    console.log(formWidget.find(`#cave-list div[data-id="${response.cave}"]`))
+    formWidget.find('#cave-list div').removeClass('selected');
     formWidget.find(`#cave-list div[data-id="${response.cave}"]`).addClass('selected');
 
-    // formWidget.find('#head-list div').removeClass('selected');
-    console.log(formWidget.find(`#head-list div[data-id="${response.head}"]`))
+    formWidget.find('#head-list div').removeClass('selected');
     formWidget.find(`#head-list div[data-id="${response.head}"]`).addClass('selected');
 }
 
@@ -195,7 +228,7 @@ function loadCoordinates(page = 0) {
 function loadKillers(page = 0) {
     if (isKillerLoading) return;
     isKillerLoading = true;
-    $('#killer-loading-indicator').show();
+    $(`#${formId}`).find('#killer-loading-indicator').show();
 
     $.ajax({
         url: c.baseUrl + c.apiUrl + '/person',
@@ -219,7 +252,7 @@ function loadKillers(page = 0) {
         },
         complete: function () {
             isKillerLoading = false;
-            $('#killer-loading-indicator').hide();
+            $(`#${formId}`).find('#killer-loading-indicator').hide();
         }
     });
 }
@@ -227,7 +260,7 @@ function loadKillers(page = 0) {
 function loadCaves(page = 0) {
     if (isCaveLoading) return;
     isCaveLoading = true;
-    $('#cave-loading-indicator').show();
+    $(`#${formId}`).find('#cave-loading-indicator').show();
 
     $.ajax({
         url: c.baseUrl + c.apiUrl + '/dragonCave',
@@ -251,7 +284,7 @@ function loadCaves(page = 0) {
         },
         complete: function () {
             isCaveLoading = false;
-            $('#cave-loading-indicator').hide();
+            $(`#${formId}`).find('#cave-loading-indicator').hide();
         }
     });
 }
@@ -259,7 +292,7 @@ function loadCaves(page = 0) {
 function loadHeads(page = 0) {
     if (isHeadLoading) return;
     isHeadLoading = true;
-    $('#head-loading-indicator').show();
+    $(`#${formId}`).find('#head-loading-indicator').show();
 
     $.ajax({
         url: c.baseUrl + c.apiUrl + '/dragonHead',
@@ -283,7 +316,7 @@ function loadHeads(page = 0) {
         },
         complete: function () {
             isHeadLoading = false;
-            $('#head-loading-indicator').hide();
+            $(`#${formId}`).find('#head-loading-indicator').hide();
         }
     });
 }

@@ -30,69 +30,7 @@
   </nav>
   <section>
     <article class="input-article">
-      <div class="block input">
-        <form id="form">
-          <div class="changeable-input">
-            Изменяемый:
-            <label>
-              <input name="is-changeable-input" type="checkbox">
-              <span>Да</span>
-            </label>
-          </div>
-          <div class="text-input">
-            <label>Имя:
-              <input type="text" id="name-input" required>
-            </label>
-          </div>
-          <div class="choice-input">
-            <label>Цвет глаз:
-              <select id="color-eyes-input" required>
-                <option value="GREEN">Зеленый</option>
-                <option value="RED">Красный</option>
-                <option value="BLACK">Черный</option>
-                <option value="YELLOW">Желтый</option>
-              </select>
-            </label>
-          </div>
-          <div class="choice-input">
-            <label>Цвет волос:
-              <select id="color-hair-input" required>
-                <option value="GREEN">Зеленый</option>
-                <option value="RED">Красный</option>
-                <option value="BLACK">Черный</option>
-                <option value="YELLOW">Желтый</option>
-              </select>
-            </label>
-          </div>
-          <div class="text-input">
-            <label>Локация:</label>
-            <div id="location-list-container" class="scrollable-list">
-              <div id="location-list">
-
-              </div>
-              <div id="location-loading-indicator" style="display: none;">Загрузка...</div>
-            </div>
-            <input type="hidden" id="location-input" required>
-          </div>
-          <div class="text-input">
-            <label>Пасспорт:
-              <input type="text" id="passport-input" required>
-            </label>
-          </div>
-          <div class="choice-input">
-            <label>Национальность:
-              <select id="nationality-input" required>
-                <option value="FRANCE">Франция</option>
-                <option value="CHINA">Китай</option>
-                <option value="VATICAN">Ватикан</option>
-                <option value="THAILAND">Таиланд</option>
-                <option value="NORTH_KOREA">Северная Корея</option>
-              </select>
-            </label>
-          </div>
-
-          <input class="submit-button" type="submit" value="Добавить">
-        </form>
+      <div id="input-article" class="block input">
       </div>
     </article>
     <article class="table-article">
@@ -100,15 +38,15 @@
         <table class="table-results">
           <thead>
           <tr>
-            <th>ID</th>
-            <th>Изменяемый</th>
-            <th>Создатель</th>
-            <th>Имя</th>
-            <th>Цвет глаз</th>
-            <th>Цвет волос</th>
-            <th>Локация</th>
-            <th>Пасспорт</th>
-            <th>Национальность</th>
+            <th data-name="id">ID</th>
+            <th data-name="isChangeable">Изменяемый</th>
+            <th data-name="user">Создатель</th>
+            <th data-name="name">Имя</th>
+            <th data-name="eyeColor">Цвет глаз</th>
+            <th data-name="hairColor">Цвет волос</th>
+            <th data-name="location">Локация</th>
+            <th data-name="passportID">Пасспорт</th>
+            <th data-name="nationality">Национальность</th>
             <th>Действия</th>
           </tr>
           </thead>
@@ -131,6 +69,15 @@
       </div>
     </article>
   </section>
+</div>
+<div id="update-modal" class="modal">
+  <div class="modal-content" >
+    <span class="close">&times;</span>
+    <h2>Изменить координату</h2>
+    <div id="update-modal-content">
+
+    </div>
+  </div>
 </div>
 </body>
 </html>

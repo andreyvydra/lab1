@@ -1,0 +1,62 @@
+<form id="form">
+  <div class="changeable-input">
+    Изменяемый:
+    <label>
+      <input name="is-changeable-input" type="checkbox">
+      <span>Да</span>
+    </label>
+  </div>
+  <div class="text-input">
+    <label>Имя:
+      <input type="text" id="name-input" required>
+    </label>
+  </div>
+  <div class="choice-input">
+    <label>Цвет глаз:
+      <select id="color-eyes-input" required>
+        <option value="GREEN">Зеленый</option>
+        <option value="RED">Красный</option>
+        <option value="BLACK">Черный</option>
+        <option value="YELLOW">Желтый</option>
+      </select>
+    </label>
+  </div>
+  <div class="choice-input">
+    <label>Цвет волос:
+      <select id="color-hair-input" required>
+        <option value="GREEN">Зеленый</option>
+        <option value="RED">Красный</option>
+        <option value="BLACK">Черный</option>
+        <option value="YELLOW">Желтый</option>
+      </select>
+    </label>
+  </div>
+  <div class="text-input">
+    <label>Локация:</label>
+    <div id="location-list-container" class="scrollable-list">
+      <div id="location-list">
+
+      </div>
+      <div id="location-loading-indicator" style="display: none;">Загрузка...</div>
+    </div>
+    <input type="hidden" id="location-input" required>
+  </div>
+  <div class="text-input">
+    <label>Пасспорт:
+      <input type="text" id="passport-input" required>
+    </label>
+  </div>
+  <div class="choice-input">
+    <label>Национальность:
+      <select id="nationality-input" required>
+        <option value="FRANCE">Франция</option>
+        <option value="CHINA">Китай</option>
+        <option value="VATICAN">Ватикан</option>
+        <option value="THAILAND">Таиланд</option>
+        <option value="NORTH_KOREA">Северная Корея</option>
+      </select>
+    </label>
+  </div>
+
+  <input class="submit-button" type="submit" value="Добавить">
+</form>
