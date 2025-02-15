@@ -92,6 +92,16 @@ module.exports = {
             template: './html/forms/dragon_head_form.html',
             filename: './forms/dragon_head_form.html',
             chunks: []
+        }),
+        new HtmlWebpackPlugin({
+            template: './html/forms/dragon_cave_form.html',
+            filename: './forms/dragon_cave_form.html',
+            chunks: []
+        }),
+        new HtmlWebpackPlugin({
+            template: './html/forms/location_form.html',
+            filename: './forms/location_form.html',
+            chunks: []
         })
     ]
 }

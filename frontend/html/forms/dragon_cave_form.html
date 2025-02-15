@@ -1,0 +1,20 @@
+<form id="form">
+  <div class="changeable-input">
+    Изменяемый:
+    <label>
+      <input name="is-changeable-input" type="checkbox">
+      <span>Да</span>
+    </label>
+  </div>
+  <div class="text-input">
+    <label>Глубина:
+      <input type="number" id="depth-input" pattern="^-?\d*([.,]{1}\d{0,6})?$" required>
+    </label>
+  </div>
+  <div class="text-input">
+    <label>Кол-во сокровищ:
+      <input type="number" id="treasures-input" pattern="^-?\d*([.,]{1}\d{0,6})?$" required>
+    </label>
+  </div>
+  <input class="submit-button" type="submit" value="Добавить">
+</form>

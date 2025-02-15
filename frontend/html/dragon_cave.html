@@ -30,27 +30,7 @@
     </nav>
     <section>
         <article class="input-article">
-            <div class="block input">
-                <form id="form">
-                    <div class="changeable-input">
-                        Изменяемый:
-                        <label>
-                            <input name="is-changeable-input" type="checkbox">
-                            <span>Да</span>
-                        </label>
-                    </div>
-                    <div class="text-input">
-                        <label>Глубина:
-                            <input type="number" id="depth-input" pattern="^-?\d*([.,]{1}\d{0,6})?$" required>
-                        </label>
-                    </div>
-                    <div class="text-input">
-                        <label>Кол-во сокровищ:
-                            <input type="number" id="treasures-input" pattern="^-?\d*([.,]{1}\d{0,6})?$" required>
-                        </label>
-                    </div>
-                    <input class="submit-button" type="submit" value="Добавить">
-                </form>
+            <div id="input-article" class="block input">
             </div>
         </article>
         <article class="table-article">
@@ -58,11 +38,11 @@
                 <table class="table-results">
                     <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Изменяемый</th>
-                        <th>Создатель</th>
-                        <th>Глубина</th>
-                        <th>Кол-во сокровищ</th>
+                        <th data-name="id">ID</th>
+                        <th data-name="isChangeable">Изменяемый</th>
+                        <th data-name="user">Создатель</th>
+                        <th data-name="depth">Глубина</th>
+                        <th data-name="numberOfTreasures">Кол-во сокровищ</th>
                         <th>Действия</th>
                     </tr>
                     </thead>
@@ -86,5 +66,16 @@
         </article>
     </section>
 </div>
+
+<div id="update-modal" class="modal">
+    <div class="modal-content" >
+        <span class="close">&times;</span>
+        <h2>Изменить координату</h2>
+        <div id="update-modal-content">
+
+        </div>
+    </div>
+</div>
+
 </body>
 </html>

@@ -30,32 +30,7 @@
         </nav>
         <section>
             <article class="input-article">
-                <div class="block input">
-                    <form id="form">
-                        <div class="changeable-input">
-                            Изменяемый:
-                            <label>
-                                <input name="is-changeable-input" type="checkbox">
-                                <span>Да</span>
-                            </label>
-                        </div>
-                        <div class="text-input">
-                            <label>X:
-                                <input type="number" id="x-input" pattern="^-?\d*([.,]{1}\d{0,6})?$" required>
-                            </label>
-                        </div>
-                        <div class="text-input">
-                            <label>Y:
-                                <input type="number" id="y-input" pattern="^-?\d*([.,]{1}\d{0,6})?$" required>
-                            </label>
-                        </div>
-                        <div class="text-input">
-                            <label>Имя:
-                                <input type="text" id="name-input" required>
-                            </label>
-                        </div>
-                        <input class="submit-button" type="submit" value="Добавить">
-                    </form>
+                <div id="input-article" class="block input">
                 </div>
             </article>
             <article class="table-article">
@@ -63,12 +38,12 @@
                     <table class="table-results">
                         <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Изменяемый</th>
-                            <th>Создатель</th>
-                            <th>X</th>
-                            <th>Y</th>
-                            <th>Название</th>
+                            <th data-name="id">ID</th>
+                            <th data-name="isChangeable">Изменяемый</th>
+                            <th data-name="user">Создатель</th>
+                            <th data-name="x">X</th>
+                            <th data-name="y">Y</th>
+                            <th data-name="name">Название</th>
                             <th>Действия</th>
                         </tr>
                         </thead>
@@ -91,6 +66,16 @@
                 </div>
             </article>
         </section>
+    </div>
+
+    <div id="update-modal" class="modal">
+        <div class="modal-content" >
+            <span class="close">&times;</span>
+            <h2>Изменить координату</h2>
+            <div id="update-modal-content">
+
+            </div>
+        </div>
     </div>
 </body>
 </html>
