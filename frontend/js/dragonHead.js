@@ -1,20 +1,55 @@
 import $ from "jquery";
-import {addObject, pagination} from "./objects";
-import {redirectIfAuthenticated} from "./common/utils";
+import './common/modal';
+import {addObject, putObject} from "./objects";
+import {loadForm, redirectIfAuthenticated} from "./common/utils";
+import {common} from "./common/common";
+import {form, setValues} from "./forms/dragonHeadForm";
+import {PaginationTable} from "./common/pagination";
 
-$(document).ready(function() {
+const formPath = './forms/dragon_head_form.html'
+
+class DragonHeadPaginationTable extends PaginationTable {
+    handleUpdate(id) {
+        loadForm(formPath, 'update-modal-content',
+            'update-dragon-head-form', function (formId) {
+                const modal = $('#update-modal');
+                modal.css('display', 'block');
+                $('#update-dragon-head-form').data('id', id);
+
+                $('#update-dragon-head-form').on('submit', function (event) {
+                    event.preventDefault();
+                    const formData = getFormData(this);
+                    putObject("/dragonHead", $(this).data('id'), formData);
+                });
+
+                form('update-dragon-head-form');
+                setValues(id);
+            });
+    }
+}
+
+function getFormData(form) {
+    return {
+        isChangeable: $(form).find('input[name="is-changeable-input"]').is(':checked'),
+        eyesCount: $(form).find('#eyes-count-input').val(),
+        size: $(form).find('#size-input').val(),
+    };
+}
+
+$(document).ready(function () {
     redirectIfAuthenticated();
-    pagination("/dragonHead");
 
-    $('#form').on('submit', function (event) {
+    // Table and it's functions
+    const table = new DragonHeadPaginationTable("/dragonHead");
+    common(table);
+
+    loadForm(formPath, 'input-article', 'dragon-head-form', null);
+    form('dragon-head-form');
+
+    $(`#dragon-head-form`).on('submit', function (event) {
         event.preventDefault();
-
-        const formData = {
-            isChangeable: $('#form input[name="is-changeable-input"]').is(':checked'),
-            eyesCount: $('#eyes-count-input').val(),
-            size: $('#size-input').val(),
-        };
-
-        addObject("/dragonHead", formData)
+        const formData = getFormData(this);
+        addObject("/dragonHead", formData);
     });
+
 })
