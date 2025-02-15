@@ -82,6 +82,11 @@ module.exports = {
             template: './html/forms/dragon_form.html',
             filename: './forms/dragon_form.html',
             chunks: []
+        }),
+        new HtmlWebpackPlugin({
+            template: './html/forms/coordinates_form.html',
+            filename: './forms/coordinates_form.html',
+            chunks: []
         })
     ]
 }
