@@ -1,10 +1,10 @@
 import $ from "jquery";
-import {addObject, main} from "./objects";
+import {addObject, pagination} from "./objects";
 import {redirectIfAuthenticated} from "./common/utils";
 
 $(document).ready(function() {
     redirectIfAuthenticated();
-    main("/coordinates");
+    pagination("/coordinates");
 
     $('#form').on('submit', function (event) {
         event.preventDefault();

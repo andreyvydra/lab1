@@ -1,9 +1,10 @@
 import $ from 'jquery';
-import { errorNotifies } from './error';
+import {errorNotifies} from './error';
 import * as c from './constants';
 import {sound} from "./sound";
 import * as u from "./utils";
-import {redirectIfAuthenticated} from "./utils";
+import {decodeJWT, getAuthHeader, getCookie, loadForm, redirectIfAuthenticated} from "./utils";
+import InfoNotify from "./notifications/infoNotify";
 
 export class PaginationTable {
     constructor(url) {
@@ -13,10 +14,11 @@ export class PaginationTable {
         this.pageSizeButton = $("#page-size");
 
         this.addButtonListeners();
+        this.addSortHandlers();
         let page = 0;
         this.url = url;
         this.changeSelectedButton(page);
-        this.doRequest(page);
+        this.doRequest(page, 10);
 
         window.sessionStorage.setItem("page", "0");
         window.sessionStorage.setItem("size", "10");
@@ -43,7 +45,9 @@ export class PaginationTable {
         let pageNumber = parseInt($(event.currentTarget).text()) - 1;
         window.sessionStorage.setItem("page", pageNumber.toString());
         let size = parseInt(window.sessionStorage.getItem("size"));
-        this.doRequest(pageNumber, size);
+        this.doRequest(pageNumber, size,
+            window.sessionStorage.getItem("sortField"),
+            window.sessionStorage.getItem("ascending"));
         this.changeSelectedButton(pageNumber);
     }
 
@@ -53,15 +57,60 @@ export class PaginationTable {
         console.log(pageSize)
         window.sessionStorage.setItem("size", pageSize.toString());
         let pageNumber = parseInt(window.sessionStorage.getItem("page"));
-        this.doRequest(pageNumber, pageSize);
+        this.doRequest(
+            pageNumber, pageSize,
+            window.sessionStorage.getItem("sortField"),
+            window.sessionStorage.getItem("ascending")
+        );
     }
 
-    doRequest(pageNumber, pageSize) {
+    addSortHandlers() {
+        const headers = $('th');
+        headers.on('click', (event) => {
+            const sortField = $(event.target).data('name');
+            if (sortField == null) return;
+
+            const currentIndicator = $(event.target).find('.sort-indicator');
+            let ascending = true;
+            if (currentIndicator.length > 0) {
+                ascending = currentIndicator.text() === ' ▼';
+            }
+
+            window.sessionStorage.setItem("sortField", sortField);
+            window.sessionStorage.setItem("ascending", ascending.toString());
+
+            this.doRequest(
+                window.sessionStorage.getItem("page"),
+                window.sessionStorage.getItem("size"),
+                sortField,
+                ascending
+            );
+
+            headers.find('.sort-indicator').remove();
+            const indicator = $('<span>').addClass('sort-indicator').text(ascending ? ' ▲' : ' ▼');
+            $(event.target).append(indicator);
+        });
+    }
+
+
+    doRequest(pageNumber, pageSize, sortField = null, ascending = null) {
+        console.log(sortField, ascending)
+
+        const requestData = {
+            page: pageNumber,
+            size: pageSize,
+        };
+
+        if (sortField) {
+            requestData.sortField = sortField;
+            requestData.ascending = ascending;
+        }
+
         $.ajax({
             url: c.baseUrl + c.apiUrl + this.url,
             type: "GET",
             headers: u.getAuthHeader(),
-            data: {"page": pageNumber, "size": pageSize},
+            data: requestData,
             success: (response) => {
                 this.updateBodyTable(response);
                 this.updateButtons(response);
@@ -156,7 +205,54 @@ export class PaginationTable {
             }
         }
 
+        const {_, payload, __} = decodeJWT(getCookie("access_token"));
+        const actionsCell = $('<td>');
+        const isOwner = values.user === payload.id;
+        const isAdmin = payload.role === "ROLE_ADMIN";
+
+        if (isOwner || (isAdmin && values.isChangeable)) {
+            const updateButton = $('<button>')
+                .html('<div>')
+                .addClass('action-button update-button')
+                .on('click', () => this.handleUpdate(values.id));
+
+            const deleteButton = $('<button>')
+                .html('<div>')
+                .addClass('action-button delete-button')
+                .on('click', () => this.handleDelete(values.id));
+
+            actionsCell.append(updateButton, deleteButton);
+        }
+
+        row.append(actionsCell);
         this.table.append(row);
+    }
+
+    handleUpdate(id) {
+
+    }
+
+    handleDelete(id) {
+        if (confirm("Вы уверены, что хотите удалить эту запись?")) {
+            $.ajax({
+                url: c.baseUrl + c.apiUrl + this.url + '/' + id + '/delete',
+                type: "DELETE",
+                headers: u.getAuthHeader(),
+                success: (response) => {
+                    new InfoNotify("Запись успешно удалена");
+                    this.doRequest(
+                        window.sessionStorage.getItem("page"),
+                        window.sessionStorage.getItem("size"),
+                        window.sessionStorage.getItem("sortField"),
+                        window.sessionStorage.getItem("ascending")
+                    );
+                },
+                error: (xhr) => {
+                    if (xhr.status === 403 || xhr.status === 401) redirectIfAuthenticated();
+                    errorNotifies(xhr);
+                },
+            });
+        }
     }
 }
 

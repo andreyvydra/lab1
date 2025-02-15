@@ -1,5 +1,5 @@
 import $ from "jquery";
-import {addObject, main} from "./objects";
+import {addObject, pagination} from "./objects";
 import {getAuthHeader, redirectIfAuthenticated} from "./common/utils";
 import * as c from "./common/constants";
 import ErrorNotify from "./common/notifications/errorNotify";
@@ -12,7 +12,7 @@ let hasMore = true;
 
 $(document).ready(function() {
     redirectIfAuthenticated();
-    main("/person");
+    pagination("/person");
 
     loadLocations();
 

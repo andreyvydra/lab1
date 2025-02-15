@@ -1,3 +1,7 @@
+import ErrorNotify from "./notifications/errorNotify";
+import $ from "jquery";
+import {form} from "../forms/dragonForm";
+
 export function getCookie (name) {
     var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
     if (match) return match[2];
@@ -62,4 +66,20 @@ export function decodeJWT(token) {
         console.error('Ошибка при декодировании токена:', error);
         return null;
     }
+}
+
+export function loadForm(form_path, containerId, formId, callback) {
+    $.ajax({
+        async: false,
+        url: form_path,
+        type: 'GET',
+        success: function (response) {
+            $(`#${containerId}`).html(response);
+            $(`#${containerId} > form`).attr('id', formId);
+            if (callback) callback(formId);
+        },
+        error: function (xhr) {
+            new ErrorNotify('Ошибка при загрузке формы', xhr.responseText);
+        },
+    });
 }

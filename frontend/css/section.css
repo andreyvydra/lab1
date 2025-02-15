@@ -62,7 +62,7 @@ section {
 }
 
 input, option, select {
-    background-color: dimgrey;
+    background-color: grey;
 }
 
 .submit-button {
@@ -117,4 +117,23 @@ td {
 #pagination-button-container > span, button {
     padding: 5px;
     margin: 10px;
+}
+
+.action-button {
+    padding: 5px;
+    margin: 2px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: transparent;
+    width: 24px;
+    height: 24px;
+}
+
+.delete-button {
+    background: url('../static/img/delete.png') center center/24px 24px;
+}
+
+.update-button {
+    background: url('../static/img/edit.png') center center/24px 24px;
 }

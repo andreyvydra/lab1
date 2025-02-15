@@ -7,6 +7,7 @@
     margin-top: 10px;
 }
 
+#location-list div,
 #coordinates-list div,
 #killer-list div,
 #cave-list div,
@@ -16,6 +17,7 @@
     transition: background-color 0.3s ease;
 }
 
+#location-list div:hover,
 #coordinates-list div:hover,
 #killer-list div:hover,
 #cave-list div:hover,
@@ -23,6 +25,7 @@
     background-color: rgba(0, 0, 0, 0.1);
 }
 
+#location-list div.selected,
 #coordinates-list div.selected,
 #killer-list div.selected,
 #cave-list div.selected,
@@ -30,6 +33,7 @@
     background-color: rgba(0, 0, 0, 0.2);
 }
 
+#location-loading-indicator,
 #coordinates-loading-indicator,
 #killer-loading-indicator,
 #cave-loading-indicator,

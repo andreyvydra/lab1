@@ -1,0 +1,89 @@
+<form id="dragon-form">
+    <div class="changeable-input">
+        Изменяемый:
+        <label>
+            <input name="is-changeable-input" type="checkbox">
+            <span>Да</span>
+        </label>
+    </div>
+    <div class="text-input">
+        <label>Имя:
+            <input type="text" id="name-input" required>
+        </label>
+    </div>
+    <div class="choice-input">
+        <label>Координаты:</label>
+        <div id="coordinates-list-container" class="scrollable-list">
+            <div id="coordinates-list"></div>
+            <div id="coordinates-loading-indicator" style="display: none;">Загрузка...</div>
+        </div>
+    </div>
+    <input type="hidden" id="coordinates-input" required>
+
+    <div class="choice-input">
+        <label>Убийца:</label>
+        <div id="killer-list-container" class="scrollable-list">
+            <div id="killer-list"></div>
+            <div id="killer-loading-indicator" style="display: none;">Загрузка...</div>
+        </div>
+    </div>
+    <input type="hidden" id="killer-input" required>
+
+    <div class="choice-input">
+        <label>Пещера:</label>
+        <div id="cave-list-container" class="scrollable-list">
+            <div id="cave-list"></div>
+            <div id="cave-loading-indicator" style="display: none;">Загрузка...</div>
+        </div>
+    </div>
+    <input type="hidden" id="cave-input" required>
+
+    <div class="text-input">
+        <label>Возраст:
+            <input type="number" id="age-input" required>
+        </label>
+    </div>
+
+    <div class="changeable-input">
+        Говорящий:
+        <label>
+            <input name="speaking-input" type="checkbox">
+            <span>Да</span>
+        </label>
+    </div>
+
+    <div class="choice-input">
+        <label>Цвет:
+            <select id="color-input" required>
+                <option value="GREEN">Зеленый</option>
+                <option value="RED">Красный</option>
+                <option value="BLACK">Черный</option>
+                <option value="YELLOW">Желтый</option>
+            </select>
+        </label>
+    </div>
+
+    <div class="choice-input">
+        <label>Вид:
+            <select id="dragon-character-input" required>
+                <option value="WISE">Мудрый</option>
+                <option value="EVIL">Злой</option>
+                <option value="GOOD">Добрый</option>
+                <option value="CHAOTIC">Хаотичный</option>
+                <option value="CHAOTIC_EVIL">Хаотично-злой</option>
+            </select>
+        </label>
+    </div>
+
+    <div class="choice-input">
+        <label>Голова:</label>
+        <div id="head-list-container" class="scrollable-list">
+            <div id="head-list"></div>
+            <div id="head-loading-indicator" style="display: none;">Загрузка...</div>
+        </div>
+    </div>
+    <input type="hidden" id="head-input" required>
+
+    <input class="submit-button" type="submit" value="Добавить">
+
+</form>
