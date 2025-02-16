@@ -177,3 +177,22 @@ td {
     color: white;
     cursor: pointer;
 }
+
+#admin-requests-button {
+    display: none;
+}
+
+#send-application-for-admin {
+    display: none;
+    padding: 5px 10px;
+    background-color: dimgray;
+    color: white;
+    cursor: pointer;
+}
+
+.approve-button, .reject-button {
+    padding: 5px 10px;
+    background-color: dimgray;
+    color: white;
+    cursor: pointer;
+}

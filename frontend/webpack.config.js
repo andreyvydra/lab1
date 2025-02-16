@@ -12,7 +12,8 @@ module.exports = {
         dragon: './js/dragon.js',
         dragonCave: './js/dragonCave.js',
         dragonHead: './js/dragonHead.js',
-        coordinates: './js/coordinates.js'
+        coordinates: './js/coordinates.js',
+        adminRequests: './js/adminRequests.js'
     },
     output: {
         filename: '[name].js',
@@ -107,6 +108,11 @@ module.exports = {
             template: './html/forms/person_form.html',
             filename: './forms/person_form.html',
             chunks: []
+        }),
+        new HtmlWebpackPlugin({
+            template: './html/admin_requests.html',
+            filename: './admin_requests.html',
+            chunks: ['adminRequests']
         })
     ]
 }

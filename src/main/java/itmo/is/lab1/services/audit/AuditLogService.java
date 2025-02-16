@@ -1,6 +1,5 @@
 package itmo.is.lab1.services.audit;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import itmo.is.lab1.models.AuditLog;
 import itmo.is.lab1.models.user.User;
 import jakarta.persistence.EntityManager;

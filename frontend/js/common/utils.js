@@ -22,7 +22,8 @@ const servicePages = [
     'dragon.html',
     'dragon_head.html',
     'dragon_cave.html',
-    'coordinates.html'
+    'coordinates.html',
+    'admin_requests.html'
 ]
 
 export function redirect(path) {
