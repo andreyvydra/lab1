@@ -35,5 +35,6 @@ function connect(table) {
         }, u.getAuthHeader());
     }, function(error) {
         console.error('Ошибка подключения:', error);
+        connect(table);
     });
 }

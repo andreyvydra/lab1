@@ -1,6 +1,7 @@
 package itmo.is.lab1.controllers;
 
 import itmo.is.lab1.models.GeneralEntity;
+import itmo.is.lab1.services.audit.Auditable;
 import itmo.is.lab1.services.common.GeneralService;
 import itmo.is.lab1.services.common.requests.GeneralEntityRequest;
 import itmo.is.lab1.services.common.responses.GeneralEntityResponse;
@@ -49,6 +50,7 @@ public class GeneralController<T extends GeneralEntityRequest,
         return service.findById(id);
     }
 
+    @Auditable(action = "DELETE", entityType = "GeneralEntity")
     @DeleteMapping(
             value = "/{id}/delete",
             produces = APPLICATION_JSON_VALUE)
@@ -56,6 +58,7 @@ public class GeneralController<T extends GeneralEntityRequest,
         return service.deleteById(id);
     }
 
+    @Auditable(action = "UPDATE", entityType = "GeneralEntity")
     @PutMapping(
             value = "/{id}/change",
             produces = APPLICATION_JSON_VALUE)
