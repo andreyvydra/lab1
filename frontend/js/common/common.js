@@ -2,8 +2,8 @@ import {decodeJWT, getCookie, setTokenToCookie} from "./utils";
 import $ from "jquery";
 import * as u from "./utils";
 import SockJS from "sockjs-client";
-import * as c from "./constants";
 import Stomp from "stompjs";
+import {baseUrl} from "./constants";
 
 export function common(table) {
     const decoded  = decodeJWT(getCookie("access_token"));
@@ -18,7 +18,7 @@ export function common(table) {
 }
 
 function connect(table) {
-    let socket = new SockJS(c.baseUrl + '/ws', null, {transports: ['websocket']});
+    let socket = new SockJS(baseUrl + '/ws', null, {transports: ['websocket']});
     let stompClient = Stomp.over(socket);
 
     stompClient.connect(u.getAuthHeader(), function (frame) {
@@ -26,8 +26,10 @@ function connect(table) {
 
         stompClient.subscribe('/topic/entities', function (messageOutput) {
             table.doRequest(
-                parseInt(window.localStorage.getItem("page")),
-                parseInt(window.localStorage.getItem("size"))
+                window.sessionStorage.getItem("page"),
+                window.sessionStorage.getItem("size"),
+                window.sessionStorage.getItem("sortField"),
+                window.sessionStorage.getItem("ascending")
             );
         }, u.getAuthHeader());
     }, function(error) {

@@ -34,6 +34,7 @@ public class PersonService extends GeneralService<PersonRequest, PersonResponse,
         entity.setValues(request, entity.getUser());
         entity.setValues(request, locationService);
         repository.save(entity);
+        messagingTemplate.convertAndSend("/topic/entities", buildResponse(entity));
         return buildResponse(entity);
     }
 }

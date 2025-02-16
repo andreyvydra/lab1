@@ -37,7 +37,7 @@ public abstract class GeneralService<
     @Autowired
     protected UserService userService;
     @Autowired
-    private SimpMessagingTemplate messagingTemplate;
+    protected SimpMessagingTemplate messagingTemplate;
 
     public PaginatedResponse<R> findAll(String filter, String sortField, Boolean ascending, Integer page, Integer size) {
         PageRequest pageRequest = PageRequest.of(

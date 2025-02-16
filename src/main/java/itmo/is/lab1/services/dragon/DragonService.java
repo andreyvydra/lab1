@@ -44,6 +44,7 @@ public class DragonService extends GeneralService<DragonRequest, DragonResponse,
         entity.setValues(request, entity.getUser(),
                 pr, dr, dcr, cr);
         repository.save(entity);
+        messagingTemplate.convertAndSend("/topic/entities", buildResponse(entity));
         return buildResponse(entity);
     }
 
@@ -62,7 +63,7 @@ public class DragonService extends GeneralService<DragonRequest, DragonResponse,
                 }
             }
         }
-
+        messagingTemplate.convertAndSend("/topic/entities", "Было произведено удаление.");
         return new GeneralMessageResponse().setMessage("Было произведено удаление.");
     }
 

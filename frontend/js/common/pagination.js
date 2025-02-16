@@ -23,6 +23,7 @@ export class PaginationTable {
         window.sessionStorage.setItem("page", "0");
         window.sessionStorage.setItem("size", "10");
 
+
         this.pageSizeButton.on("change", (event) => this.changePageSize(event));
 
     }
@@ -78,6 +79,8 @@ export class PaginationTable {
 
             window.sessionStorage.setItem("sortField", sortField);
             window.sessionStorage.setItem("ascending", ascending.toString());
+
+            console.log(sortField)
 
             this.doRequest(
                 window.sessionStorage.getItem("page"),
