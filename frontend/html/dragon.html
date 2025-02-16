@@ -35,7 +35,27 @@
 
     </article>
     <article class="table-article">
+      <div class="block functions">
+        <div class="function-container">
+          <label for="unique-values">Получить уникальные значения:</label>
+          <button id="unique-values">Получить</button>
+        </div>
+        <div class="function-container">
+          <label for="delete-by-age">Удалить все сущности по возрасту:</label>
+          <input type="number" id="delete-by-age-input" placeholder="Введите возраст">
+          <button id="delete-by-age">Удалить все</button>
+        </div>
+        <div class="function-container">
+          <label for="delete-one-by-age">Удалить одну сущность по возрасту:</label>
+          <input type="number" id="delete-one-by-age-input" placeholder="Введите возраст">
+          <button id="delete-one-by-age">Удалить одну</button>
+        </div>
+      </div>
       <div class="block results">
+        <label>
+          Поиск:
+          <input id="search-input">
+        </label>
         <table class="table-results">
           <thead>
           <tr>

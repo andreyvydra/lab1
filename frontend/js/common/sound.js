@@ -3,8 +3,7 @@ import $ from "jquery";
 
 class Sound {
     inputs = {
-        xInputs: $(".but"),
-        rInputs: document.getElementsByClassName("r"),
+        xInputs: $("button"),
         submit: document.getElementsByClassName("submit-button"),
         paginationButtons: document.getElementsByClassName("pagination-button"),
         pageSizeButtons: document.getElementById("page-size")

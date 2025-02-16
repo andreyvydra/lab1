@@ -54,17 +54,23 @@ public class DragonService extends GeneralService<DragonRequest, DragonResponse,
             return new GeneralMessageResponse().setMessage("Драконов такого возраста не было найдено!");
         }
 
+        boolean deleted = false;
         for (Dragon dragon : dragonList) {
             if (dragon.getUser() == userService.getCurrentUser() || (dragon.getIsChangeable() &&
                     userService.getCurrentUser().getRole() == Role.ROLE_ADMIN)) {
                 repository.delete(dragon);
+                deleted = true;
                 if (!all) {
                     break;
                 }
             }
         }
-        messagingTemplate.convertAndSend("/topic/entities", "Было произведено удаление.");
-        return new GeneralMessageResponse().setMessage("Было произведено удаление.");
+
+        if (deleted) {
+            messagingTemplate.convertAndSend("/topic/entities", "Было произведено удаление.");
+            return new GeneralMessageResponse().setMessage("Было произведено удаление.");
+        }
+        return new GeneralMessageResponse().setMessage("Драконов такого возраста не было найдено!");
     }
 
     public List<Boolean> getUniqueSpeaking() {

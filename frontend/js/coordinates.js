@@ -14,6 +14,8 @@ class CoordinatesPaginationTable extends PaginationTable {
             'update-coordinates-form', function (formId) {
                 const modal = $('#update-modal');
                 modal.css('display', 'block');
+
+
                 $('#update-coordinates-form').data('id', id);
 
                 $('#update-coordinates-form').on('submit', function (event) {

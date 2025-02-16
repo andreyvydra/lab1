@@ -29,7 +29,8 @@ function connect(table) {
                 window.sessionStorage.getItem("page"),
                 window.sessionStorage.getItem("size"),
                 window.sessionStorage.getItem("sortField"),
-                window.sessionStorage.getItem("ascending")
+                window.sessionStorage.getItem("ascending"),
+                window.sessionStorage.getItem("filter")
             );
         }, u.getAuthHeader());
     }, function(error) {

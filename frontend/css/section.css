@@ -62,6 +62,7 @@ section {
 }
 
 input, option, select {
+    padding: 5px;
     background-color: grey;
 }
 
@@ -136,4 +137,43 @@ td {
 
 .update-button {
     background: url('../static/img/edit.png') center center/24px 24px;
+}
+
+/* Доп функции */
+
+.functions {
+    display: flex;
+    flex-direction: column;
+    max-width: 600px;
+    max-height: 200px;
+    width: 100%;
+    border: coral 3px solid;
+    text-align: center;
+}
+
+.block.functions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.function-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.function-container label {
+    font-weight: bold;
+}
+
+.function-container input {
+    padding: 5px;
+}
+
+.function-container button {
+    padding: 5px 10px;
+    background-color: dimgray;
+    color: white;
+    cursor: pointer;
 }

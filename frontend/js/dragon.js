@@ -1,11 +1,14 @@
 import $ from "jquery";
 import {addObject, putObject} from "./objects";
-import {loadForm, redirectIfAuthenticated} from "./common/utils";
+import {getAuthHeader, loadForm, redirectIfAuthenticated} from "./common/utils";
 import './common/common';
 import './common/modal';
 import {form, setValues} from "./forms/dragonForm";
 import {PaginationTable} from "./common/pagination";
 import {common} from "./common/common";
+import * as c from "./common/constants";
+import ErrorNotify from "./common/notifications/errorNotify";
+import InfoNotify from "./common/notifications/infoNotify";
 
 
 const formPath = './forms/dragon_form.html'
@@ -60,6 +63,57 @@ $(document).ready(function () {
         event.preventDefault();
         const formData = getFormData(this);
         addObject("/dragon", formData);
+    });
+
+    $("#unique-values").on("click", function () {
+        $.ajax({
+            url: c.baseUrl + c.apiUrl + '/dragon/speaking',
+            type: 'GET',
+            headers: getAuthHeader(),
+            success: function (response) {
+                console.log(response);
+                new InfoNotify("Уникальные значений speaking", response.toString())
+            },
+            error: function (xhr, status, error) {
+                new ErrorNotify('Ошибка при загрузке уникальных значений speaking', error);
+            }
+        });
+    });
+
+    $("#delete-by-age").on("click", function () {
+        let ageToDelete = parseInt($("#delete-by-age-input").val());
+
+        $.ajax({
+            url: c.baseUrl + c.apiUrl + '/dragon/deleteAllByAge',
+            type: 'DELETE',
+            headers: getAuthHeader(),
+            data: {'age': ageToDelete},
+            success: function (response) {
+                console.log(response.message)
+                new InfoNotify("Удаление по возрасту", response.message)
+            },
+            error: function (xhr, status, error) {
+                new ErrorNotify('Ошибка при удалении всех сущностей по возрасту', error);
+            }
+        });
+    });
+
+    $("#delete-one-by-age").on("click", function () {
+        let ageToDelete = parseInt($("#delete-one-by-age-input").val());
+
+        $.ajax({
+            url: c.baseUrl + c.apiUrl + '/dragon/deleteByAge',
+            type: 'DELETE',
+            headers: getAuthHeader(),
+            data: {'age': ageToDelete},
+            success: function (response) {
+                console.log(response.message)
+                new InfoNotify("Удаление по возрасту", response.message)
+            },
+            error: function (xhr, status, error) {
+                new ErrorNotify('Ошибка при удалении всех сущностей по возрасту', error);
+            }
+        });
     });
 
 })

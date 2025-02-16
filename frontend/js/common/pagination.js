@@ -15,6 +15,8 @@ export class PaginationTable {
 
         this.addButtonListeners();
         this.addSortHandlers();
+        this.addSearchListener();
+
         let page = 0;
         this.url = url;
         this.changeSelectedButton(page);
@@ -22,10 +24,27 @@ export class PaginationTable {
 
         window.sessionStorage.setItem("page", "0");
         window.sessionStorage.setItem("size", "10");
+        window.sessionStorage.removeItem("sortField");
+        window.sessionStorage.removeItem("ascending");
+        window.sessionStorage.removeItem("filter");
 
 
         this.pageSizeButton.on("change", (event) => this.changePageSize(event));
 
+    }
+
+    addSearchListener() {
+        $("#search-input").on("input", (event) => {
+            const query = $(event.target).val();
+            window.sessionStorage.setItem("filter", query);
+            this.doRequest(
+                window.sessionStorage.getItem("page"),
+                window.sessionStorage.getItem("size"),
+                window.sessionStorage.getItem("sortField"),
+                window.sessionStorage.getItem("ascending"),
+                query
+            );
+        })
     }
 
     addButtonListeners() {
@@ -48,7 +67,8 @@ export class PaginationTable {
         let size = parseInt(window.sessionStorage.getItem("size"));
         this.doRequest(pageNumber, size,
             window.sessionStorage.getItem("sortField"),
-            window.sessionStorage.getItem("ascending"));
+            window.sessionStorage.getItem("ascending"),
+            window.sessionStorage.getItem("filter"));
         this.changeSelectedButton(pageNumber);
     }
 
@@ -61,7 +81,8 @@ export class PaginationTable {
         this.doRequest(
             pageNumber, pageSize,
             window.sessionStorage.getItem("sortField"),
-            window.sessionStorage.getItem("ascending")
+            window.sessionStorage.getItem("ascending"),
+            window.sessionStorage.getItem("filter")
         );
     }
 
@@ -86,7 +107,8 @@ export class PaginationTable {
                 window.sessionStorage.getItem("page"),
                 window.sessionStorage.getItem("size"),
                 sortField,
-                ascending
+                ascending,
+                window.sessionStorage.getItem("filter")
             );
 
             headers.find('.sort-indicator').remove();
@@ -96,12 +118,13 @@ export class PaginationTable {
     }
 
 
-    doRequest(pageNumber, pageSize, sortField = null, ascending = null) {
+    doRequest(pageNumber, pageSize, sortField = null, ascending = null, filter = '') {
         console.log(sortField, ascending)
 
         const requestData = {
             page: pageNumber,
             size: pageSize,
+            filter: filter
         };
 
         if (sortField) {
@@ -115,11 +138,23 @@ export class PaginationTable {
             headers: u.getAuthHeader(),
             data: requestData,
             success: (response) => {
-                this.updateBodyTable(response);
-                this.updateButtons(response);
-                window.sessionStorage.setItem("page", response.currentPage);
-                sound.updateButtons();
-                this.changeSelectedButton(response.currentPage);
+                if (response.currentPage >= response.totalPages && response.totalPages !== 0) {
+                    window.sessionStorage.setItem("page", Math.max(response.totalPages - 1, 0).toString());
+                    requestData.page = Math.max(response.totalPages - 1, 0);
+                    this.doRequest(
+                        requestData.page,
+                        requestData.size,
+                        requestData.sortField,
+                        requestData.ascending,
+                        requestData.filter
+                    )
+                } else {
+                    this.updateBodyTable(response);
+                    this.updateButtons(response);
+                    window.sessionStorage.setItem("page", response.currentPage);
+                    sound.updateButtons();
+                    this.changeSelectedButton(response.currentPage);
+                }
             },
             error: (xhr) => {
                 if (xhr.status === 403 || xhr.status === 401) redirectIfAuthenticated();
@@ -137,7 +172,7 @@ export class PaginationTable {
 
     updateButtons(response) {
         this.deleteButtons();
-        let pageNumber = response.currentPage;
+        let pageNumber = response.currentPage + 1;
         let totalPages = parseInt(response.totalPages)
         if (totalPages <= c.minPageCount) {
             this.addMinimumButtonsWidget(response);
@@ -154,7 +189,7 @@ export class PaginationTable {
     }
 
     addMiddleButtonsWidget(response) {
-        let pageNumber = parseInt(response.currentPage);
+        let pageNumber = parseInt(response.currentPage) + 1;
         this.addButton(1);
         this.addSpan();
         for (let i = pageNumber - 2; i <= pageNumber + 2; i++) {
@@ -247,7 +282,8 @@ export class PaginationTable {
                         window.sessionStorage.getItem("page"),
                         window.sessionStorage.getItem("size"),
                         window.sessionStorage.getItem("sortField"),
-                        window.sessionStorage.getItem("ascending")
+                        window.sessionStorage.getItem("ascending"),
+                        window.sessionStorage.getItem("filter")
                     );
                 },
                 error: (xhr) => {
