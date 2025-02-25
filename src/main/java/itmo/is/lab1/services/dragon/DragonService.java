@@ -9,6 +9,7 @@ import itmo.is.lab1.services.dragon.requests.DragonRequest;
 import itmo.is.lab1.services.dragon.responses.DragonResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -50,6 +51,7 @@ DragonService extends GeneralService<DragonRequest, DragonResponse, Dragon, Drag
         return buildResponse(entity);
     }
 
+    @Transactional
     public GeneralMessageResponse deleteByAge(Integer age, Boolean all) {
         List<Dragon> dragonList = repository.findByAge(age);
         if (dragonList.isEmpty()) {
