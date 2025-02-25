@@ -10,7 +10,7 @@ import org.springframework.data.jpa.domain.Specification;
 import java.util.ArrayList;
 
 public class GeneralSpecification {
-    public static <T extends GeneralEntity<?>> Specification<T> filterByMultipleFields(String filter) {
+    public static <T> Specification<T> filterByMultipleFields(String filter) {
         return (Root<T> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
             Predicate predicate = criteriaBuilder.conjunction();
             ArrayList<Predicate> predicates = new ArrayList<>();

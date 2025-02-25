@@ -13,7 +13,8 @@ module.exports = {
         dragonCave: './js/dragonCave.js',
         dragonHead: './js/dragonHead.js',
         coordinates: './js/coordinates.js',
-        adminRequests: './js/adminRequests.js'
+        adminRequests: './js/adminRequests.js',
+        importHistory: './js/importHistory.js'
     },
     output: {
         filename: '[name].js',
@@ -113,6 +114,11 @@ module.exports = {
             template: './html/admin_requests.html',
             filename: './admin_requests.html',
             chunks: ['adminRequests']
+        }),
+        new HtmlWebpackPlugin({
+            template: './html/import_history.html',
+            filename: './import_history.html',
+            chunks: ['importHistory']
         })
     ]
 }

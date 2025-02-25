@@ -13,7 +13,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class DragonService extends GeneralService<DragonRequest, DragonResponse, Dragon, DragonRepository> {
+public class
+
+DragonService extends GeneralService<DragonRequest, DragonResponse, Dragon, DragonRepository> {
     @Autowired
     private PersonRepository pr;
     @Autowired

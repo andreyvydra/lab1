@@ -1,11 +1,15 @@
 import $ from "jquery";
 import {addObject, putObject} from "./objects";
-import {loadForm, redirectIfAuthenticated} from "./common/utils";
+import {getAuthHeader, loadForm, redirectIfAuthenticated} from "./common/utils";
 import './common/common';
 import './common/modal';
 import {form, setValues} from "./forms/personForm";
 import {PaginationTable} from "./common/pagination";
 import {common} from "./common/common";
+import WarningNotify from "./common/notifications/warningNotify";
+import {errorNotifies} from "./common/error";
+import InfoNotify from "./common/notifications/infoNotify";
+import * as c from "./common/constants";
 
 const formPath = './forms/person_form.html'
 
@@ -28,6 +32,9 @@ class PersonPaginationTable extends PaginationTable {
             });
     }
 }
+
+
+
 
 function getFormData(form) {
     return  {
@@ -56,6 +63,34 @@ $(document).ready(function () {
         event.preventDefault();
         const formData = getFormData(this);
         addObject("/person", formData);
+    });
+
+
+    $('#upload-xlsx-form').on('submit', function (event) {
+        event.preventDefault();
+        const fileInput = $('#xlsx-file')[0];
+        if (fileInput.files.length > 0) {
+            event.preventDefault();
+            const formData = new FormData();
+            formData.append('file', $('#xlsx-file')[0].files[0]);
+
+            $.ajax({
+                url: `${c.baseUrl}${c.apiUrl}/person/import`,
+                headers: getAuthHeader(),
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    new InfoNotify("Импорт", response.message);
+                },
+                error: function(error) {
+                    errorNotifies(error);
+                }
+            });
+        } else {
+            new WarningNotify("Ошибка", "Файл должен быть выбран!")
+        }
     });
 
 })

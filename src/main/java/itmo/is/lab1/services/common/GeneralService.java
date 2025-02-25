@@ -19,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -72,7 +73,7 @@ public abstract class GeneralService<
         throw new NotFoundException();
     }
 
-
+    @Transactional
     public GeneralMessageResponse deleteById(@NotNull Long id) {
         E entity = getOwnedEntityById(id);
         repository.delete(entity);
@@ -81,7 +82,7 @@ public abstract class GeneralService<
                 .setMessage("Объект успешно удалён.");
     }
 
-
+    @Transactional
     public R create(@NotNull T request) {
         E entity = buildEntity(request);
         repository.save(entity);
@@ -91,6 +92,7 @@ public abstract class GeneralService<
 
     protected abstract E buildEntity(T request);
 
+    @Transactional
     public R updateById(@NotNull Long id, @NotNull T request) {
         E entity = getOwnedEntityById(id);
         entity.setValues(request, entity.getUser());
