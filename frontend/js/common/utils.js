@@ -1,6 +1,5 @@
 import ErrorNotify from "./notifications/errorNotify";
 import $ from "jquery";
-import {form} from "../forms/dragonForm";
 
 export function getCookie (name) {
     var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));

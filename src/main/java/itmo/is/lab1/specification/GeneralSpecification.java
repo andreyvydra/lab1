@@ -1,6 +1,5 @@
 package itmo.is.lab1.specification;
 
-import itmo.is.lab1.models.GeneralEntity;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;

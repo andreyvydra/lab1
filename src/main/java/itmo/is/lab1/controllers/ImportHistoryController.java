@@ -1,6 +1,5 @@
 package itmo.is.lab1.controllers;
 
-import itmo.is.lab1.models.ImportHistory;
 import itmo.is.lab1.services.import_history.ImportHistoryService;
 import itmo.is.lab1.services.import_history.responses.ImportHistoryResponse;
 import itmo.is.lab1.services.user.UserService;
