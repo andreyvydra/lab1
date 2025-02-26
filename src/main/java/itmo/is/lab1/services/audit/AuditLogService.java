@@ -6,6 +6,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -18,7 +19,7 @@ public class AuditLogService {
     private EntityManager entityManager;
 
 
-    @Transactional
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public void logAction(User principal, String entityName, Long entityId,
                           String action, Object entity) {
         AuditLog auditLog = AuditLog.builder()

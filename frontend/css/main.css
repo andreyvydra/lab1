@@ -22,3 +22,7 @@ html, body, .wrapper{
 .wrapper {
     min-height: 100%;
 }
+
+.sn-notify {
+    margin-right: 20px;
+}

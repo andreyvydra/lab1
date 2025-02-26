@@ -9,6 +9,7 @@ import itmo.is.lab1.services.dragon.requests.DragonRequest;
 import itmo.is.lab1.services.dragon.responses.DragonResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -51,7 +52,7 @@ DragonService extends GeneralService<DragonRequest, DragonResponse, Dragon, Drag
         return buildResponse(entity);
     }
 
-    @Transactional
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public GeneralMessageResponse deleteByAge(Integer age, Boolean all) {
         List<Dragon> dragonList = repository.findByAge(age);
         if (dragonList.isEmpty()) {
@@ -77,6 +78,7 @@ DragonService extends GeneralService<DragonRequest, DragonResponse, Dragon, Drag
         return new GeneralMessageResponse().setMessage("Драконов такого возраста не было найдено!");
     }
 
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public List<Boolean> getUniqueSpeaking() {
         return repository.findDistinctSpeakingValues();
     }

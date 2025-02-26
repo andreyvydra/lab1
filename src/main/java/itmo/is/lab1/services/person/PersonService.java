@@ -22,6 +22,7 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
@@ -66,7 +67,7 @@ public class PersonService extends GeneralService<PersonRequest, PersonResponse,
         return buildResponse(entity);
     }
 
-    @Transactional
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public void importFromXlsx(MultipartFile file) throws IOException, ValidationException {
         List<Person> persons = new ArrayList<>();
         ImportHistory history = importHistoryService.startImport(userService.getCurrentUser());

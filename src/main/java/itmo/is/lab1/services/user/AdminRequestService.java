@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -29,7 +30,7 @@ public class AdminRequestService {
     private final AdminRequestRepository adminRequestRepository;
     private final UserService userService;
 
-    @Transactional
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public AdminRequestResponse createAdminRequest(User user) {
         if (user.getRole().equals(Role.ROLE_ADMIN)) {
             throw new ForbiddenException();
@@ -45,6 +46,7 @@ public class AdminRequestService {
         return buildResponse(savedRequest);
     }
 
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public PaginatedResponse<AdminRequestResponse> getAllAdminRequests(String sortField, Boolean ascending, Integer page, Integer size) {
         if (!userService.getCurrentUser().getRole().equals(Role.ROLE_ADMIN)) {
             throw new ForbiddenException();
@@ -71,6 +73,7 @@ public class AdminRequestService {
         );
     }
 
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public PaginatedResponse<AdminRequestResponse> getAdminRequestsByStatus(AdminRequestStatus status, String sortField, Boolean ascending, Integer page, Integer size) {
         if (!userService.getCurrentUser().getRole().equals(Role.ROLE_ADMIN)) {
             throw new ForbiddenException();
@@ -107,6 +110,7 @@ public class AdminRequestService {
                 .build();
     }
 
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public void changeStatus(Long id, User admin, AdminRequestStatus adminRequestStatus) {
         if (!userService.getCurrentUser().getRole().equals(Role.ROLE_ADMIN)) {
             throw new ForbiddenException();

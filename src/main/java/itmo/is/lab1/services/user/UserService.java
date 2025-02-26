@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,30 +23,30 @@ public class UserService {
         return repository.save(user);
     }
 
-
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public User create(User user) {
         if (repository.existsByUsername(user.getUsername())) {
             throw new GeneralException(HttpStatus.BAD_REQUEST, "Пользователь с таким именем уже существует");
         }
-
         return save(user);
     }
 
-
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public User getByUsername(String username) {
         return repository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
 
     }
 
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public User getCurrentUser() {
-        // Получение имени пользователя из контекста Spring Security
         var username = SecurityContextHolder.getContext().getAuthentication().getName();
         return getByUsername(username);
     }
 
 
     @Deprecated
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public void getAdmin() {
         var user = getCurrentUser();
         user.setRole(Role.ROLE_ADMIN);

@@ -19,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -40,6 +41,7 @@ public abstract class GeneralService<
     @Autowired
     protected SimpMessagingTemplate messagingTemplate;
 
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public PaginatedResponse<R> findAll(String filter, String sortField, Boolean ascending, Integer page, Integer size) {
         PageRequest pageRequest = PageRequest.of(
                 page,
@@ -65,6 +67,7 @@ public abstract class GeneralService<
 
     protected abstract R buildResponse(E element);
 
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public R findById(Long id) {
         Optional<E> location = repository.findById(id);
         if (location.isPresent()) {
@@ -73,7 +76,7 @@ public abstract class GeneralService<
         throw new NotFoundException();
     }
 
-    @Transactional
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public GeneralMessageResponse deleteById(@NotNull Long id) {
         E entity = getOwnedEntityById(id);
         repository.delete(entity);
@@ -82,7 +85,7 @@ public abstract class GeneralService<
                 .setMessage("Объект успешно удалён.");
     }
 
-    @Transactional
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public R create(@NotNull T request) {
         E entity = buildEntity(request);
         repository.save(entity);
@@ -92,7 +95,7 @@ public abstract class GeneralService<
 
     protected abstract E buildEntity(T request);
 
-    @Transactional
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public R updateById(@NotNull Long id, @NotNull T request) {
         E entity = getOwnedEntityById(id);
         entity.setValues(request, entity.getUser());

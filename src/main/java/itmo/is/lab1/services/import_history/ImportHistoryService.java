@@ -13,6 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -44,6 +46,7 @@ public class ImportHistoryService {
         importHistoryRepository.save(history);
     }
 
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public PaginatedResponse<ImportHistoryResponse> getAllHistory(String filter, String sortField, Boolean ascending, Integer page, Integer size) {
         PageRequest pageRequest = PageRequest.of(
                 page,
