@@ -12,6 +12,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
@@ -34,6 +36,7 @@ public class AuthenticationService {
         }
 
         var jwt = jwtService.generateToken(user);
+        userService.addCred(user);
         return new JwtAuthenticationResponse(jwt, "OK");
     }
 
@@ -48,6 +51,7 @@ public class AuthenticationService {
 
 
         var jwt = jwtService.generateToken(user);
+        userService.addCred(user);
         return new JwtAuthenticationResponse(jwt, "OK");
     }
 }

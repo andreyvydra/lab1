@@ -6,6 +6,7 @@ import itmo.is.lab1.repositories.UserRepository;
 import itmo.is.lab1.services.common.errors.BadRequestException;
 import itmo.is.lab1.services.common.errors.GeneralException;
 import itmo.is.lab1.services.common.responses.GeneralMessageResponse;
+import itmo.is.lab1.services.jwt.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,13 +15,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository repository;
+    public final HashMap<String, User> creds = new HashMap<>();
 
     public User save(User user) {
         return repository.save(user);
+    }
+
+    public void addCred(User user) {
+        creds.put(user.getUsername(), user);
     }
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
@@ -40,6 +48,9 @@ public class UserService {
 
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public User getCurrentUser() {
+        if (creds.containsKey(SecurityContextHolder.getContext().getAuthentication().getName())) {
+            return creds.get(SecurityContextHolder.getContext().getAuthentication().getName());
+        }
         var username = SecurityContextHolder.getContext().getAuthentication().getName();
         return getByUsername(username);
     }

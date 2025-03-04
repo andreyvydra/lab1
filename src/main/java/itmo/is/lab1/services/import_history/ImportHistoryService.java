@@ -41,10 +41,11 @@ public class ImportHistoryService {
     }
 
     @Transactional(propagation = Propagation.MANDATORY)
-    public void finishImport(ImportHistory history, String status, Integer addedObjects) {
+    public void finishImport(ImportHistory history, String status, Integer addedObjects, String objectName) {
         history.setEndTime(LocalDateTime.now());
         history.setStatus(status);
         history.setAddedObjects(addedObjects);
+        history.setObjectName(objectName);
         importHistoryRepository.save(history);
     }
 

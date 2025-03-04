@@ -159,6 +159,11 @@
 			<groupId>org.springframework.retry</groupId>
 			<artifactId>spring-retry</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>io.minio</groupId>
+			<artifactId>minio</artifactId>
+			<version>8.5.11</version>
+		</dependency>
     </dependencies>
 
 	<dependencyManagement>

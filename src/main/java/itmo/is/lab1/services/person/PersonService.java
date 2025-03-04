@@ -8,6 +8,7 @@ import itmo.is.lab1.models.person.enums.Country;
 import itmo.is.lab1.repositories.LocationRepository;
 import itmo.is.lab1.repositories.PersonRepository;
 import itmo.is.lab1.services.common.GeneralService;
+import itmo.is.lab1.services.common.MinioService;
 import itmo.is.lab1.services.common.errors.GeneralException;
 import itmo.is.lab1.services.import_history.ImportHistoryService;
 import itmo.is.lab1.services.location.LocationService;
@@ -21,7 +22,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.CannotAcquireLockException;
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
@@ -34,8 +34,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.sql.SQLClientInfoException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -50,6 +48,8 @@ public class PersonService extends GeneralService<PersonRequest, PersonResponse,
     private LocationRepository locationRepository;
     @Autowired
     private ImportHistoryService importHistoryService;
+    @Autowired
+    private MinioService minioService;
 
     @Override
     protected PersonResponse buildResponse(Person element) {
@@ -84,35 +84,53 @@ public class PersonService extends GeneralService<PersonRequest, PersonResponse,
             maxAttempts = 5,
             backoff = @Backoff(delay = 500, maxDelay = 5000, multiplier = 2.0, random = true)
     )
-    @Transactional(isolation = Isolation.SERIALIZABLE)
-    public void importFromXlsx(MultipartFile file) throws IOException, ValidationException {
-        List<Person> persons = new ArrayList<>();
+    @Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = Exception.class)
+    public void importFromXlsx(MultipartFile file) throws Exception {
         ImportHistory history = importHistoryService.startImport(userService.getCurrentUser());
+        String objectName = "import-" + System.currentTimeMillis() + ".xlsx";
 
-        try (Workbook workbook = WorkbookFactory.create(file.getInputStream())) {
-            Sheet sheet = workbook.getSheetAt(0);
-            Iterator<Row> rowIterator = sheet.iterator();
+        try {
+            // Сохраняем файл в MinIO
+            minioService.uploadFile(objectName, file);
 
-            if (rowIterator.hasNext()) {
-                rowIterator.next();
-            }
-
-            while (rowIterator.hasNext()) {
-                Row row = rowIterator.next();
-                PersonImportRequest request = parseRowToPersonRequest(row);
-                validatePersonRequest(request);
-                Person person = buildPersonFromRequest(request);
-                persons.add(person);
-            }
-
+            // Импорт данных в базу данных
+            List<Person> persons = parseAndValidateFile(file);
             locationRepository.saveAll(persons.stream().map(Person::getLocation).collect(Collectors.toList()));
             repository.saveAll(persons);
-            importHistoryService.finishImport(history, "SUCCESS", persons.size());
+            importHistoryService.finishImport(history, "SUCCESS", persons.size(), objectName);
             messagingTemplate.convertAndSend("/topic/entities", "Imported from XLSX");
+
         } catch (Exception e) {
-            importHistoryService.finishImport(history, "FAILED", 0);
+            // Удаляем файл из MinIO
+            // БД откатывается из-за прерывания транзакции и rollbackFor
+            importHistoryService.finishImport(history, "FAILED", 0, null);
+            messagingTemplate.convertAndSend("/topic/entities", "Imported from XLSX");
+
+            minioService.deleteFile(objectName);
             throw e;
         }
+    }
+
+    private List<Person> parseAndValidateFile(MultipartFile file) throws IOException {
+        Workbook workbook = WorkbookFactory.create(file.getInputStream());
+        List<Person> persons = new ArrayList<>();
+
+        Sheet sheet = workbook.getSheetAt(0);
+        Iterator<Row> rowIterator = sheet.iterator();
+
+        if (rowIterator.hasNext()) {
+            rowIterator.next();
+        }
+
+        while (rowIterator.hasNext()) {
+            Row row = rowIterator.next();
+            PersonImportRequest request = parseRowToPersonRequest(row);
+            validatePersonRequest(request);
+            Person person = buildPersonFromRequest(request);
+            persons.add(person);
+        }
+
+        return persons;
     }
 
     private PersonImportRequest parseRowToPersonRequest(Row row) {
