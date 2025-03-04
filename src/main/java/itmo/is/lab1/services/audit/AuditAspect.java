@@ -9,6 +9,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -27,10 +28,11 @@ public class AuditAspect {
     public Object logAudit(ProceedingJoinPoint joinPoint, Auditable auditable) throws Throwable {
 
         Object res;
+
         try {
             res = joinPoint.proceed();
         } catch (Throwable e) {
-            log.error("Auditing failed", e);
+            log.warn("Join Point cannot be proceed");
             throw e;
         }
 
@@ -45,9 +47,13 @@ public class AuditAspect {
                     entityId = (Long) arg;
                 } else {
                     entity = arg;
+                    if (entityId == null) {
+                        entityId = getIdFromEntity(entity);
+                    }
                 }
             }
-            if (principal != null && entityId != null) {
+
+            if (entityId != null) {
                 auditLogService.logAction(
                         principal,
                         auditable.entityType(),
@@ -55,9 +61,14 @@ public class AuditAspect {
                         auditable.action(),
                         entity
                 );
+            } else {
+                log.warn("Не удалось определить ID сущности для аудита.");
             }
+        } catch (UsernameNotFoundException e) {
+            log.warn("Текущий пользователь не аутентифицирован.");
         } catch (Exception e) {
             log.error("Auditing failed", e);
+            throw e;
         }
         return res;
     }

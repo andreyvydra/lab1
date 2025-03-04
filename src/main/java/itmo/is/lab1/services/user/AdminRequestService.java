@@ -12,9 +12,14 @@ import itmo.is.lab1.services.user.responses.AdminRequestResponse;
 import itmo.is.lab1.specification.GeneralSpecification;
 import itmo.is.lab1.specification.PaginatedResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.CannotAcquireLockException;
+import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +35,15 @@ public class AdminRequestService {
     private final AdminRequestRepository adminRequestRepository;
     private final UserService userService;
 
+    @Retryable(
+            value = {
+                    CannotAcquireLockException.class,
+                    OptimisticLockingFailureException.class,
+                    PessimisticLockingFailureException.class
+            },
+            maxAttempts = 5,
+            backoff = @Backoff(delay = 500, maxDelay = 5000, multiplier = 2.0, random = true)
+    )
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public AdminRequestResponse createAdminRequest(User user) {
         if (user.getRole().equals(Role.ROLE_ADMIN)) {
@@ -110,6 +124,15 @@ public class AdminRequestService {
                 .build();
     }
 
+    @Retryable(
+            value = {
+                    CannotAcquireLockException.class,
+                    OptimisticLockingFailureException.class,
+                    PessimisticLockingFailureException.class
+            },
+            maxAttempts = 5,
+            backoff = @Backoff(delay = 500, maxDelay = 5000, multiplier = 2.0, random = true)
+    )
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public void changeStatus(Long id, User admin, AdminRequestStatus adminRequestStatus) {
         if (!userService.getCurrentUser().getRole().equals(Role.ROLE_ADMIN)) {

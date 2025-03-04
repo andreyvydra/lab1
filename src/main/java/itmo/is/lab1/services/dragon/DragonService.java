@@ -8,6 +8,11 @@ import itmo.is.lab1.services.common.responses.GeneralMessageResponse;
 import itmo.is.lab1.services.dragon.requests.DragonRequest;
 import itmo.is.lab1.services.dragon.responses.DragonResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.CannotAcquireLockException;
+import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.dao.PessimisticLockingFailureException;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,6 +57,15 @@ DragonService extends GeneralService<DragonRequest, DragonResponse, Dragon, Drag
         return buildResponse(entity);
     }
 
+    @Retryable(
+            value = {
+                    CannotAcquireLockException.class,
+                    OptimisticLockingFailureException.class,
+                    PessimisticLockingFailureException.class
+            },
+            maxAttempts = 5,
+            backoff = @Backoff(delay = 500, maxDelay = 5000, multiplier = 2.0, random = true)
+    )
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public GeneralMessageResponse deleteByAge(Integer age, Boolean all) {
         List<Dragon> dragonList = repository.findByAge(age);

@@ -20,7 +20,13 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.CannotAcquireLockException;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +34,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.sql.SQLClientInfoException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -67,6 +75,15 @@ public class PersonService extends GeneralService<PersonRequest, PersonResponse,
         return buildResponse(entity);
     }
 
+    @Retryable(
+            value = {
+                    CannotAcquireLockException.class,
+                    OptimisticLockingFailureException.class,
+                    PessimisticLockingFailureException.class
+            },
+            maxAttempts = 5,
+            backoff = @Backoff(delay = 500, maxDelay = 5000, multiplier = 2.0, random = true)
+    )
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public void importFromXlsx(MultipartFile file) throws IOException, ValidationException {
         List<Person> persons = new ArrayList<>();

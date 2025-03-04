@@ -11,17 +11,24 @@ import itmo.is.lab1.services.common.responses.GeneralMessageResponse;
 import itmo.is.lab1.services.user.UserService;
 import itmo.is.lab1.specification.GeneralSpecification;
 import itmo.is.lab1.specification.PaginatedResponse;
+import jakarta.persistence.OptimisticLockException;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.CannotAcquireLockException;
+import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -76,6 +83,15 @@ public abstract class GeneralService<
         throw new NotFoundException();
     }
 
+    @Retryable(
+            value = {
+                    CannotAcquireLockException.class,
+                    OptimisticLockingFailureException.class,
+                    PessimisticLockingFailureException.class
+            },
+            maxAttempts = 5,
+            backoff = @Backoff(delay = 500, maxDelay = 5000, multiplier = 2.0, random = true)
+    )
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public GeneralMessageResponse deleteById(@NotNull Long id) {
         E entity = getOwnedEntityById(id);
@@ -85,6 +101,16 @@ public abstract class GeneralService<
                 .setMessage("Объект успешно удалён.");
     }
 
+
+    @Retryable(
+            value = {
+                    CannotAcquireLockException.class,
+                    OptimisticLockingFailureException.class,
+                    PessimisticLockingFailureException.class
+            },
+            maxAttempts = 5,
+            backoff = @Backoff(delay = 500, maxDelay = 5000, multiplier = 2.0, random = true)
+    )
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public R create(@NotNull T request) {
         E entity = buildEntity(request);
@@ -95,6 +121,15 @@ public abstract class GeneralService<
 
     protected abstract E buildEntity(T request);
 
+    @Retryable(
+            value = {
+                    CannotAcquireLockException.class,
+                    OptimisticLockingFailureException.class,
+                    PessimisticLockingFailureException.class
+            },
+            maxAttempts = 5,
+            backoff = @Backoff(delay = 500, maxDelay = 5000, multiplier = 2.0, random = true)
+    )
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public R updateById(@NotNull Long id, @NotNull T request) {
         E entity = getOwnedEntityById(id);

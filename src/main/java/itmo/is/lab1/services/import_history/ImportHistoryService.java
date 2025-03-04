@@ -31,6 +31,7 @@ public class ImportHistoryService {
     @Autowired
     private UserService userService;
 
+    @Transactional(propagation = Propagation.MANDATORY)
     public ImportHistory startImport(User user) {
         ImportHistory history = new ImportHistory();
         history.setUser(user);
@@ -39,6 +40,7 @@ public class ImportHistoryService {
         return importHistoryRepository.save(history);
     }
 
+    @Transactional(propagation = Propagation.MANDATORY)
     public void finishImport(ImportHistory history, String status, Integer addedObjects) {
         history.setEndTime(LocalDateTime.now());
         history.setStatus(status);

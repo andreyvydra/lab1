@@ -55,7 +55,11 @@ public class GeneralController<T extends GeneralEntityRequest,
             value = "/{id}/delete",
             produces = APPLICATION_JSON_VALUE)
     public @Valid GeneralMessageResponse deleteById(@PathVariable @NotNull Long id) {
-        return service.deleteById(id);
+        try {
+            return service.deleteById(id);
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     @Auditable(action = "UPDATE", entityType = "GeneralEntity")
