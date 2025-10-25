@@ -1,6 +1,6 @@
 import $ from "jquery";
 import {addObject, putObject} from "./objects";
-import {getAuthHeader, loadForm, redirectIfAuthenticated} from "./common/utils";
+import {getAuthHeader, loadForm, redirectIfAuthenticated, getCookie, decodeJWT} from "./common/utils";
 import './common/common';
 import './common/modal';
 import {form, setValues} from "./forms/personForm";
@@ -14,6 +14,22 @@ import * as c from "./common/constants";
 const formPath = './forms/person_form.html'
 
 class PersonPaginationTable extends PaginationTable {
+    addBodyTable(values) {
+        const row = $('<tr>');
+        const orderedKeys = ['id','isChangeable','user','name','eyeColor','hairColor','location','passportID','nationality'];
+        orderedKeys.forEach(k => row.append($('<td>').text(values[k])));
+        const { payload } = decodeJWT(getCookie("access_token")) || {};
+        const actionsCell = $('<td>');
+        const isOwner = payload && values.user === payload.id;
+        const isAdmin = payload && payload.role === "ROLE_ADMIN";
+        if (isOwner || (isAdmin && values.isChangeable)) {
+            const updateButton = $('<button>').html('<div>').addClass('action-button update-button').on('click', () => this.handleUpdate(values.id));
+            const deleteButton = $('<button>').html('<div>').addClass('action-button delete-button').on('click', () => this.handleDelete(values.id));
+            actionsCell.append(updateButton, deleteButton);
+        }
+        row.append(actionsCell);
+        this.table.append(row);
+    }
     handleUpdate(id) {
         loadForm(formPath, 'update-modal-content',
             'update-person-form', function (formId) {

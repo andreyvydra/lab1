@@ -62,12 +62,4 @@ public class ExceptionAdvice {
         return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
     }
 
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<GeneralMessageResponse> handleDataIntegrityViolationException(DataIntegrityViolationException e) {
-        GeneralMessageResponse response = new GeneralMessageResponse();
-        response.setMessage("Ошибка при сохранении данных. Пожалуйста, убедитесь, что указанный пасспорт уникален.");
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-    }
-
-
 }

@@ -18,6 +18,7 @@ export function setValues(id) {
             formWidget.find('input[name=is-changeable-input]').prop('checked', response.isChangeable);
             formWidget.find('#x-input').val(response.x);
             formWidget.find('#y-input').val(response.y);
+            formWidget.find('#z-input').val(response.z);
             formWidget.find('#name-input').val(response.name);
 
             formWidget.find('.submit-button').data('id', id);

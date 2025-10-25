@@ -11,7 +11,11 @@
 #coordinates-list div,
 #killer-list div,
 #cave-list div,
-#head-list div {
+#head-list div,
+#owner-list div,
+#manufacturer-list div,
+#official-address-list div,
+#town-list div {
     padding: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
@@ -21,7 +25,11 @@
 #coordinates-list div:hover,
 #killer-list div:hover,
 #cave-list div:hover,
-#head-list div:hover {
+#head-list div:hover,
+#owner-list div:hover,
+#manufacturer-list div:hover,
+#official-address-list div:hover,
+#town-list div:hover {
     background-color: rgba(0, 0, 0, 0.1);
 }
 
@@ -29,7 +37,11 @@
 #coordinates-list div.selected,
 #killer-list div.selected,
 #cave-list div.selected,
-#head-list div.selected {
+#head-list div.selected,
+#owner-list div.selected,
+#manufacturer-list div.selected,
+#official-address-list div.selected,
+#town-list div.selected {
     background-color: rgba(0, 0, 0, 0.2);
 }
 
@@ -37,7 +49,11 @@
 #coordinates-loading-indicator,
 #killer-loading-indicator,
 #cave-loading-indicator,
-#head-loading-indicator {
+#head-loading-indicator,
+#owner-loading-indicator,
+#manufacturer-loading-indicator,
+#official-address-loading-indicator,
+#town-loading-indicator {
     text-align: center;
     padding: 10px;
     font-style: italic;

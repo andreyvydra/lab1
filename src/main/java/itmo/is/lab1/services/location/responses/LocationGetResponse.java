@@ -17,13 +17,14 @@ public class LocationGetResponse extends LocationResponse {
     private Integer x;
     @NotNull(message = "y не может быть null.")
     private Long y;
-    @NotBlank(message = "name не может быть пустым.")
     private String name;
+    private long z;
 
     public void setValues(Location location) {
         super.setValues(location);
         x = location.getX();
         y = location.getY();
         name = location.getName();
+        z = location.getZ();
     }
 }

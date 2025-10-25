@@ -27,8 +27,9 @@ public class Location extends GeneralEntity<LocationRequest> {
     @Column(nullable = false)
     private Long y; //Поле не может быть null
 
-    @NotBlank(message = "name не может быть пустым")
-    private String name; //Строка не может быть пустой, Поле может быть null
+    private long z;
+
+    private String name; //Поле может быть null
 
 
     @Override
@@ -37,5 +38,6 @@ public class Location extends GeneralEntity<LocationRequest> {
         this.setX(request.getX());
         this.setY(request.getY());
         this.setName(request.getName());
+        this.setZ(request.getZ());
     }
 }

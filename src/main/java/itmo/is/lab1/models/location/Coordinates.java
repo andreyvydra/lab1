@@ -7,6 +7,7 @@ import itmo.is.lab1.services.location.requests.CoordinatesRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -20,13 +21,12 @@ import lombok.experimental.Accessors;
 @Table(name = "coordinates")
 public class Coordinates extends GeneralEntity<CoordinatesRequest> {
     @NotNull(message = "x не может быть null")
+    @Max(value = 468, message = "Максимальное значение x = 468")
     @Column(nullable = false)
-    private Long x; //Поле не может быть null
+    private Integer x; //Максимальное значение поля: 468, Поле не может быть null
 
-    @NotNull(message = "y не может быть null")
-    @Min(value = -348, message = "Значение поля y должно быть больше -349")
-    @Column(nullable = false)
-    private Integer y; //Значение поля должно быть больше -349
+    @Min(value = -452, message = "Значение поля y должно быть больше -452")
+    private double y; //Значение поля должно быть больше -452
 
     @Override
     public void setValues(CoordinatesRequest request, User user) {

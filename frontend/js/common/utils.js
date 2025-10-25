@@ -18,9 +18,9 @@ const redirectExceptions = [
 const servicePages = [
     'location.html',
     'person.html',
-    'dragon.html',
-    'dragon_head.html',
-    'dragon_cave.html',
+    'product.html',
+    'organization.html',
+    'address.html',
     'coordinates.html',
     'admin_requests.html',
     'import_history.html'
@@ -47,7 +47,7 @@ export function redirectIfAuthenticated() {
     let token = getCookie("access_token");
     const currentUrl = document.location.href;
     if (token !== undefined && token.length && !servicePages.some(x => currentUrl.includes(x)) ) {
-        redirect("dragon.html")
+        redirect("product.html")
     } else if ((token === undefined || !token.length) && servicePages.some(x => currentUrl.includes(x))) {
         redirect("login.html")
     }

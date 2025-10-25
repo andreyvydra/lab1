@@ -2,7 +2,8 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Список объектов</title>
+  <title>История импорта</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 <body>
 <div class="wrapper">
@@ -10,7 +11,7 @@
     <div class="center-container">
       <div class="diamond"></div>
       <div class="header-info">
-        <h2>Заявки</h2>
+        <h2>История импорта</h2>
       </div>
       <div class="diamond"></div>
     </div>
@@ -21,37 +22,32 @@
   <nav>
     <ul>
       <li><a href="./location.html">Локации</a></li>
-      <li><a href="./person.html">Персонажи</a></li>
-      <li><a href="./dragon.html" >Драконы</a></li>
-      <li><a href="./dragon_cave.html">Пещеры драконов</a></li>
-      <li><a href="./dragon_head.html">Головы драконов</a></li>
+      <li><a href="./person.html">Пользователи</a></li>
+      <li><a href="./product.html">Продукты</a></li>
+      <li><a href="./organization.html">Организации</a></li>
+      <li><a href="./address.html">Адреса</a></li>
       <li><a href="./coordinates.html">Координаты</a></li>
-      <li><a href="./import_history.html" class="active">История импорта</a></li>
+      <li><a href="./import_history.html" class="active">Импорт</a></li>
       <li id="admin-requests-button"><a href="./admin_requests.html">Заявки в админы</a></li>
     </ul>
   </nav>
   <section>
     <article class="table-article">
       <div class="block results">
-
         <table class="table-results">
           <thead>
           <tr>
             <th data-name="id">ID</th>
             <th data-name="user">Пользователь</th>
-            <th data-name="startTime">Время начала</th>
-            <th data-name="endTime">Время конца</th>
+            <th data-name="startTime">Начало</th>
+            <th data-name="endTime">Окончание</th>
             <th data-name="status">Статус</th>
-            <th data-name="addedObjects">Количество объектов</th>
+            <th data-name="addedObjects">Добавлено объектов</th>
           </tr>
           </thead>
-          <tbody id="pagination-table-body">
-
-          </tbody>
+          <tbody id="pagination-table-body"></tbody>
         </table>
-        <div id="pagination-button-container">
-
-        </div>
+        <div id="pagination-button-container"></div>
         <div id="page-size-button-container">
           <label for="page-size">Размер страницы: </label>
           <select id="page-size">
@@ -65,7 +61,5 @@
     </article>
   </section>
 </div>
-
-
 </body>
 </html>

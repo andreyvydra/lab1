@@ -16,6 +16,6 @@ public class LocationRequest extends GeneralEntityRequest {
     private Integer x;
     @NotNull(message = "y не может быть null.")
     private Long y;
-    @NotBlank(message = "name не может быть пустым.")
     private String name;
+    private long z;
 }

@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PersonRepository extends GeneralRepository<Person>{
     Boolean existsPersonByPassportID(String personId);
+    Boolean existsPersonByPassportIDAndIdNot(String personId, Long id);
 }

@@ -9,9 +9,9 @@ module.exports = {
         register: './js/register.js',
         location: './js/location.js',
         person: './js/person.js',
-        dragon: './js/dragon.js',
-        dragonCave: './js/dragonCave.js',
-        dragonHead: './js/dragonHead.js',
+        product: './js/product.js',
+        organization: './js/organization.js',
+        address: './js/address.js',
         coordinates: './js/coordinates.js',
         adminRequests: './js/adminRequests.js',
         importHistory: './js/importHistory.js'
@@ -61,19 +61,19 @@ module.exports = {
             chunks: ['person'],
         }),
         new HtmlWebpackPlugin({
-            template: './html/dragon.html',
-            filename: 'dragon.html',
-            chunks: ['dragon'],
+            template: './html/product.html',
+            filename: 'product.html',
+            chunks: ['product'],
         }),
         new HtmlWebpackPlugin({
-            template: './html/dragon_cave.html',
-            filename: 'dragon_cave.html',
-            chunks: ['dragonCave'],
+            template: './html/organization.html',
+            filename: 'organization.html',
+            chunks: ['organization'],
         }),
         new HtmlWebpackPlugin({
-            template: './html/dragon_head.html',
-            filename: 'dragon_head.html',
-            chunks: ['dragonHead'],
+            template: './html/address.html',
+            filename: 'address.html',
+            chunks: ['address'],
         }),
         new HtmlWebpackPlugin({
             template: './html/coordinates.html',
@@ -81,8 +81,8 @@ module.exports = {
             chunks: ['coordinates'],
         }),
         new HtmlWebpackPlugin({
-            template: './html/forms/dragon_form.html',
-            filename: './forms/dragon_form.html',
+            template: './html/forms/product_form.html',
+            filename: './forms/product_form.html',
             chunks: []
         }),
         new HtmlWebpackPlugin({
@@ -90,16 +90,7 @@ module.exports = {
             filename: './forms/coordinates_form.html',
             chunks: []
         }),
-        new HtmlWebpackPlugin({
-            template: './html/forms/dragon_head_form.html',
-            filename: './forms/dragon_head_form.html',
-            chunks: []
-        }),
-        new HtmlWebpackPlugin({
-            template: './html/forms/dragon_cave_form.html',
-            filename: './forms/dragon_cave_form.html',
-            chunks: []
-        }),
+        
         new HtmlWebpackPlugin({
             template: './html/forms/location_form.html',
             filename: './forms/location_form.html',
@@ -108,6 +99,16 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: './html/forms/person_form.html',
             filename: './forms/person_form.html',
+            chunks: []
+        }),
+        new HtmlWebpackPlugin({
+            template: './html/forms/organization_form.html',
+            filename: './forms/organization_form.html',
+            chunks: []
+        }),
+        new HtmlWebpackPlugin({
+            template: './html/forms/address_form.html',
+            filename: './forms/address_form.html',
             chunks: []
         }),
         new HtmlWebpackPlugin({

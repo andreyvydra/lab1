@@ -66,8 +66,32 @@ public class PersonService extends GeneralService<PersonRequest, PersonResponse,
     }
 
     @Override
+    @Retryable(
+            value = {
+                    CannotAcquireLockException.class,
+                    OptimisticLockingFailureException.class,
+                    PessimisticLockingFailureException.class
+            },
+            maxAttempts = 5,
+            backoff = @Backoff(delay = 500, maxDelay = 5000, multiplier = 2.0, random = true)
+    )
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    public PersonResponse create(PersonRequest request) {
+        if (repository.existsPersonByPassportID(request.getPassportID())) {
+            throw new GeneralException(HttpStatus.BAD_REQUEST, "Паспорт с таким номером уже существует");
+        }
+        Person entity = buildEntity(request);
+        repository.save(entity);
+        messagingTemplate.convertAndSend("/topic/entities", buildResponse(entity));
+        return buildResponse(entity);
+    }
+
+    @Override
     public PersonResponse updateById(Long id, PersonRequest request) {
         Person entity = getOwnedEntityById(id);
+        if (repository.existsPersonByPassportIDAndIdNot(request.getPassportID(), id)) {
+            throw new GeneralException(HttpStatus.BAD_REQUEST, "Паспорт с таким номером уже существует");
+        }
         entity.setValues(request, entity.getUser());
         entity.setValues(request, locationService);
         repository.save(entity);

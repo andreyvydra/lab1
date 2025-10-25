@@ -11,3 +11,4 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/api/coordinates")
 public class CoordinatesController extends GeneralController<CoordinatesRequest, CoordinatesResponse, Coordinates, CoordinatesService> {
 }
+
