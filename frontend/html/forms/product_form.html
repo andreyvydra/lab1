@@ -1,0 +1,75 @@
+<form id="product-form">
+    <div class="changeable-input">
+        Изменяемый:
+        <label>
+            <input name="is-changeable-input" type="checkbox">
+            <span>Да</span>
+        </label>
+    </div>
+
+    <div class="text-input">
+        <label>Название:
+            <input type="text" id="name-input" required>
+        </label>
+    </div>
+
+    <div class="choice-input">
+        <label>Координаты:</label>
+        <div id="coordinates-list-container" class="scrollable-list">
+            <div id="coordinates-list"></div>
+            <div id="coordinates-loading-indicator" style="display: none;">Загрузка...</div>
+        </div>
+    </div>
+    <input type="hidden" id="coordinates-input" required>
+
+    <div class="choice-input">
+        <label>Владелец:</label>
+        <div id="owner-list-container" class="scrollable-list">
+            <div id="owner-list"></div>
+            <div id="owner-loading-indicator" style="display: none;">Загрузка...</div>
+        </div>
+    </div>
+    <input type="hidden" id="owner-input" required>
+
+    <div class="choice-input">
+        <label>Производитель:</label>
+        <div id="manufacturer-list-container" class="scrollable-list">
+            <div id="manufacturer-list"></div>
+            <div id="manufacturer-loading-indicator" style="display: none;">Загрузка...</div>
+        </div>
+    </div>
+    <input type="hidden" id="manufacturer-input">
+
+    <div class="choice-input">
+        <label>Ед. измерения:
+            <select id="unit-input">
+                <option value="">—</option>
+                <option value="KILOGRAMS">KILOGRAMS</option>
+                <option value="CENTIMETERS">CENTIMETERS</option>
+                <option value="PCS">PCS</option>
+                <option value="GRAMS">GRAMS</option>
+            </select>
+        </label>
+    </div>
+
+    <div class="text-input">
+        <label>Цена:
+            <input type="number" id="price-input" min="1">
+        </label>
+    </div>
+
+    <div class="text-input">
+        <label>Себестоимость:
+            <input type="number" id="manufacture-cost-input">
+        </label>
+    </div>
+
+    <div class="text-input">
+        <label>Рейтинг:
+            <input type="number" id="rating-input" min="1" required>
+        </label>
+    </div>
+
+    <input class="submit-button" type="submit" value="Сохранить">
+</form>
+

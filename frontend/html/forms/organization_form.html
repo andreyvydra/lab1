@@ -1,0 +1,61 @@
+<form id="organization-form">
+    <div class="changeable-input">
+        Изменяемый:
+        <label>
+            <input name="is-changeable-input" type="checkbox">
+            <span>Да</span>
+        </label>
+    </div>
+
+    <div class="text-input">
+        <label>Название:
+            <input type="text" id="name-input" required>
+        </label>
+    </div>
+
+    <div class="choice-input">
+        <label>Официальный адрес:</label>
+        <div id="official-address-list-container" class="scrollable-list">
+            <div id="official-address-list"></div>
+            <div id="official-address-loading-indicator" style="display: none;">Загрузка...</div>
+        </div>
+    </div>
+    <input type="hidden" id="official-address-input">
+
+    <div class="text-input">
+        <label>Годовой оборот:
+            <input type="number" id="annual-turnover-input" min="1" required>
+        </label>
+    </div>
+
+    <div class="text-input">
+        <label>Сотрудников:
+            <input type="number" id="employees-count-input" min="1" required>
+        </label>
+    </div>
+
+    <div class="text-input">
+        <label>Полное имя:
+            <input type="text" id="full-name-input" required>
+        </label>
+    </div>
+
+    <div class="text-input">
+        <label>Рейтинг:
+            <input type="number" id="rating-input" min="1">
+        </label>
+    </div>
+
+    <div class="choice-input">
+        <label>Тип:
+            <select id="type-input" required>
+                <option value="">—</option>
+                <option value="COMMERCIAL">COMMERCIAL</option>
+                <option value="PUBLIC">PUBLIC</option>
+                <option value="OPEN_JOINT_STOCK_COMPANY">OPEN_JOINT_STOCK_COMPANY</option>
+            </select>
+        </label>
+    </div>
+
+    <input class="submit-button" type="submit" value="Сохранить">
+</form>
