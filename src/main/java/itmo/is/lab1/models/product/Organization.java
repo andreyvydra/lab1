@@ -20,9 +20,6 @@ import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
 import java.util.Optional;
 
 @Getter
@@ -37,7 +34,6 @@ public class Organization extends GeneralEntity<OrganizationRequest> {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "address_id")
-    @OnDelete(action = OnDeleteAction.SET_NULL)
     private Address officialAddress;
 
     @Column(nullable = false)
@@ -66,3 +62,4 @@ public class Organization extends GeneralEntity<OrganizationRequest> {
         this.type = request.getType();
     }
 }
+

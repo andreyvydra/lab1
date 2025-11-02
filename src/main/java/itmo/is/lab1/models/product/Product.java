@@ -25,8 +25,6 @@ import jakarta.validation.constraints.Min;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
@@ -44,7 +42,6 @@ public class Product extends GeneralEntity<ProductRequest> {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "coordinates_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Coordinates coordinates;
 
     @Column(nullable = false)
@@ -54,7 +51,6 @@ public class Product extends GeneralEntity<ProductRequest> {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "manufacturer_id")
-    @OnDelete(action = OnDeleteAction.SET_NULL)
     private Organization manufacturer;
 
     private Long price;
@@ -65,7 +61,6 @@ public class Product extends GeneralEntity<ProductRequest> {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "owner_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Person owner;
 
     public void setValues(
@@ -100,3 +95,4 @@ public class Product extends GeneralEntity<ProductRequest> {
         if (this.creationDate == null) this.creationDate = new Date();
     }
 }
+

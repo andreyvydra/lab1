@@ -14,9 +14,6 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
 import java.util.Optional;
 
 @Getter
@@ -30,7 +27,6 @@ public class Address extends GeneralEntity<AddressRequest> {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "town_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Location town;
 
     public void setValues(AddressRequest request, User user, LocationRepository locationRepository) {
@@ -42,3 +38,4 @@ public class Address extends GeneralEntity<AddressRequest> {
         }
     }
 }
+

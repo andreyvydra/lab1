@@ -12,9 +12,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
 import java.util.Optional;
 
 
@@ -39,7 +36,6 @@ public class Person extends GeneralEntity<PersonRequest> {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "location_id")
-    @OnDelete(action = OnDeleteAction.SET_NULL)
     private Location location; //Поле может быть null
 
     @NotNull(message = "hairColor не может быть null")
@@ -63,3 +59,5 @@ public class Person extends GeneralEntity<PersonRequest> {
         this.nationality = request.getNationality();
     }
 }
+
+

@@ -10,7 +10,7 @@ let currentTownPage = 0, isTownLoading = false, hasMoreTown = true;
 export function setValues(id) {
     const formWidget = $(`#${formId}`);
     $.ajax({
-        url: `${c.baseUrl}${c.apiUrl}/product-addresses/${id}`,
+        url: `${c.baseUrl}${c.apiUrl}/addresses/${id}`,
         type: "GET",
         headers: getAuthHeader(),
         success: (response) => {

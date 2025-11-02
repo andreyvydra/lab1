@@ -2,15 +2,17 @@ package itmo.is.lab1.models.location;
 
 
 import itmo.is.lab1.models.GeneralEntity;
+import itmo.is.lab1.models.product.Address;
 import itmo.is.lab1.models.user.User;
 import itmo.is.lab1.services.location.requests.LocationRequest;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -31,6 +33,9 @@ public class Location extends GeneralEntity<LocationRequest> {
 
     private String name; //Поле может быть null
 
+    @OneToMany(mappedBy = "town", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Address> addresses = new ArrayList<>();
+
 
     @Override
     public void setValues(LocationRequest request, User user) {
@@ -41,3 +46,4 @@ public class Location extends GeneralEntity<LocationRequest> {
         this.setZ(request.getZ());
     }
 }
+
