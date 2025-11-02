@@ -6,13 +6,7 @@ import itmo.is.lab1.models.user.User;
 import itmo.is.lab1.models.product.enums.OrganizationType;
 import itmo.is.lab1.repositories.AddressRepository;
 import itmo.is.lab1.services.product.requests.OrganizationRequest;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -33,7 +27,7 @@ public class Organization extends GeneralEntity<OrganizationRequest> {
     private String name;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "address_id")
+    @JoinColumn(name = "address_id", nullable = true, foreignKey = @ForeignKey(name = "fk_org_address_id"))
     private Address officialAddress;
 
     @Column(nullable = false)
@@ -47,7 +41,6 @@ public class Organization extends GeneralEntity<OrganizationRequest> {
     private Double rating;
 
     private OrganizationType type;
-
     public void setValues(OrganizationRequest request, User user, AddressRepository addressRepository) {
         super.setValues(request, user);
         this.name = request.getName();
@@ -62,4 +55,6 @@ public class Organization extends GeneralEntity<OrganizationRequest> {
         this.type = request.getType();
     }
 }
+
+
 

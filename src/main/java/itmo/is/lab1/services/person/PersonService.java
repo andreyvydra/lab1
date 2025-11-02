@@ -7,6 +7,7 @@ import itmo.is.lab1.models.person.enums.Color;
 import itmo.is.lab1.models.person.enums.Country;
 import itmo.is.lab1.repositories.LocationRepository;
 import itmo.is.lab1.repositories.PersonRepository;
+import itmo.is.lab1.repositories.ProductRepository;
 import itmo.is.lab1.services.common.GeneralService;
 import itmo.is.lab1.services.common.errors.GeneralException;
 import itmo.is.lab1.services.import_history.ImportHistoryService;
@@ -50,6 +51,8 @@ public class PersonService extends GeneralService<PersonRequest, PersonResponse,
     private LocationRepository locationRepository;
     @Autowired
     private ImportHistoryService importHistoryService;
+    @Autowired
+    private ProductRepository productRepository;
 
     @Override
     protected PersonResponse buildResponse(Person element) {
@@ -186,4 +189,13 @@ public class PersonService extends GeneralService<PersonRequest, PersonResponse,
 
         return person;
     }
+
+
+    @Override
+    @org.springframework.transaction.annotation.Transactional
+    public itmo.is.lab1.services.common.responses.GeneralMessageResponse deleteById(Long id) {
+        productRepository.deleteByOwner_Id(id);
+        return super.deleteById(id);
+    }
 }
+

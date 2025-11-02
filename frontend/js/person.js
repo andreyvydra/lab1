@@ -16,7 +16,7 @@ const formPath = './forms/person_form.html'
 class PersonPaginationTable extends PaginationTable {
     addBodyTable(values) {
         const row = $('<tr>');
-        const orderedKeys = ['id','isChangeable','user','name','eyeColor','hairColor','location','passportID','nationality'];
+        const orderedKeys = ['id','isChangeable','user','name','eyeColor','hairColor','location','passportID','nationality', 'height'];
         orderedKeys.forEach(k => row.append($('<td>').text(values[k])));
         const { payload } = decodeJWT(getCookie("access_token")) || {};
         const actionsCell = $('<td>');
@@ -60,6 +60,7 @@ function getFormData(form) {
         hairColor: $(form).find('#color-hair-input').val(),
         nationality: $(form).find('#nationality-input').val(),
         location: $(form).find('#location-input').val(),
+        height: $(form).find('#height-input').val(),
         passportID: $(form).find('#passport-input').val()
     };
 }

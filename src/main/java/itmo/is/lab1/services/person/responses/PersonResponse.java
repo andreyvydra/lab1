@@ -4,6 +4,7 @@ import itmo.is.lab1.models.person.Person;
 import itmo.is.lab1.models.person.enums.Color;
 import itmo.is.lab1.models.person.enums.Country;
 import itmo.is.lab1.services.common.responses.GeneralEntityResponse;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -27,7 +28,10 @@ public class PersonResponse extends GeneralEntityResponse {
     @NotNull(message = "passportId не может быть null.")
     private String passportID; //Значение этого поля должно быть уникальным, Поле не может быть null
 
-    private Country nationality; //Поле может быть null
+    private Country nationality; //
+
+    @Min(value = 1, message = "height должен быть выше 0.")
+    private Float height;
 
     public void setValues(Person entity) {
         super.setValues(entity);
@@ -37,5 +41,6 @@ public class PersonResponse extends GeneralEntityResponse {
         if (entity.getLocation() != null) location = entity.getLocation().getId();
         passportID = entity.getPassportID();
         nationality = entity.getNationality();
+        height = entity.getHeight();
     }
 }

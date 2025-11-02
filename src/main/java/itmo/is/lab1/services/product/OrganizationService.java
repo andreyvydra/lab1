@@ -4,6 +4,7 @@ import itmo.is.lab1.models.product.Address;
 import itmo.is.lab1.models.product.Organization;
 import itmo.is.lab1.repositories.AddressRepository;
 import itmo.is.lab1.repositories.OrganizationRepository;
+import itmo.is.lab1.repositories.ProductRepository;
 import itmo.is.lab1.services.common.GeneralService;
 import itmo.is.lab1.services.common.errors.GeneralException;
 import itmo.is.lab1.services.common.errors.NotFoundException;
@@ -25,6 +26,8 @@ public class OrganizationService extends GeneralService<OrganizationRequest, Org
 
     @Autowired
     private AddressRepository addressRepository;
+    @Autowired
+    private ProductRepository productRepository;
 
     @Override
     protected OrganizationResponse buildResponse(Organization element) {
@@ -71,5 +74,14 @@ public class OrganizationService extends GeneralService<OrganizationRequest, Org
         repository.save(entity);
         messagingTemplate.convertAndSend("/topic/entities", buildResponse(entity));
         return buildResponse(entity);
+    }
+
+    @Override
+    @Transactional
+    public itmo.is.lab1.services.common.responses.GeneralMessageResponse deleteById(Long id) {
+        var products = productRepository.findByManufacturer_Id(id);
+        for (var p : products) { p.setManufacturer(null); }
+        productRepository.saveAll(products);
+        return super.deleteById(id);
     }
 }

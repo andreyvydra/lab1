@@ -24,19 +24,22 @@ export function setValues(id) {
             formWidget.find('#color-eyes-input').val(response.eyeColor);
             formWidget.find('#color-hair-input').val(response.hairColor);
             formWidget.find('#nationality-input').val(response.nationality);
+            if (response.height !== undefined) {
+                formWidget.find('#height-input').val(response.height);
+            }
             formWidget.find('#location-input').val(response.location);
             formWidget.find('#passport-input').val(response.passportID);
 
             formWidget.find('.submit-button').data('id', id);
 
-            updateSelectedItems(formWidget, response);
+            updateSelectedItems(formWidget);
 
             formWidget.find('#location-list-container').off('scroll');
             formWidget.find('#location-list-container').on('scroll', function () {
                 const container = $(this);
                 if (container.scrollTop() + container.innerHeight() >= container[0].scrollHeight - 10 && !isLoading && hasMore) {
                     loadLocations(currentPage + 1);
-                    updateSelectedItems(formWidget, response);
+                    updateSelectedItems(formWidget);
                 }
             });
         },
@@ -47,9 +50,11 @@ export function setValues(id) {
     });
 }
 
-function updateSelectedItems(formWidget, response) {
+function updateSelectedItems(formWidget) {
+    const selected = formWidget.find('#location-input').val();
+    if (!selected) return;
     formWidget.find('#location-list div').removeClass('selected');
-    formWidget.find(`#location-list div[data-id="${response.location}"]`).addClass('selected');
+    formWidget.find(`#location-list div[data-id="${selected}"]`).addClass('selected');
 }
 
 export function form(form) {

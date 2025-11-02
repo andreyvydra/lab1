@@ -10,14 +10,7 @@ import itmo.is.lab1.repositories.PersonRepository;
 import itmo.is.lab1.services.product.requests.ProductRequest;
 import itmo.is.lab1.models.person.Person;
 import itmo.is.lab1.models.product.enums.UnitOfMeasure;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -41,7 +34,7 @@ public class Product extends GeneralEntity<ProductRequest> {
     private String name;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "coordinates_id", nullable = false)
+    @JoinColumn(name = "coordinates_id", nullable = false, foreignKey = @ForeignKey(name = "fk_product_coordinates_id"))
     private Coordinates coordinates;
 
     @Column(nullable = false)
@@ -50,7 +43,7 @@ public class Product extends GeneralEntity<ProductRequest> {
     private UnitOfMeasure unitOfMeasure;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "manufacturer_id")
+    @JoinColumn(name = "manufacturer_id", foreignKey = @ForeignKey(name = "fk_product_manufacturer_id"))
     private Organization manufacturer;
 
     private Long price;
@@ -60,7 +53,7 @@ public class Product extends GeneralEntity<ProductRequest> {
     private int rating;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "owner_id", nullable = false)
+    @JoinColumn(name = "owner_id", nullable = false, foreignKey = @ForeignKey(name = "fk_product_owner_id"))
     private Person owner;
 
     public void setValues(
@@ -95,4 +88,5 @@ public class Product extends GeneralEntity<ProductRequest> {
         if (this.creationDate == null) this.creationDate = new Date();
     }
 }
+
 

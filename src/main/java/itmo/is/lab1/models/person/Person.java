@@ -35,12 +35,14 @@ public class Person extends GeneralEntity<PersonRequest> {
     private Color hairColor; //Поле не может быть null
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "location_id")
-    private Location location; //Поле может быть null
+    @JoinColumn(name = "location_id", nullable = true, foreignKey = @ForeignKey(name = "fk_person_location_id"))
+    private Location location; //Поле не может быть null
 
     @NotNull(message = "hairColor не может быть null")
     @Column(nullable = false, unique = true)
     private String passportID; //Значение этого поля должно быть уникальным, Поле не может быть null
+
+    private float height;
 
     @Enumerated(EnumType.STRING)
     private Country nationality; //Поле может быть null
@@ -57,7 +59,10 @@ public class Person extends GeneralEntity<PersonRequest> {
         }
         this.passportID = request.getPassportID();
         this.nationality = request.getNationality();
+        this.height = request.getHeight();
     }
 }
+
+
 
 

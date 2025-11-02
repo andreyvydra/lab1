@@ -49,7 +49,7 @@ function getFormData(formEl) {
     return {
         isChangeable: $(formEl).find('input[name="is-changeable-input"]').is(':checked'),
         street: $(formEl).find('#street-input').val() || null,
-        townId: $(formEl).find('#town-input').val() || null
+        townId: $(formEl).find('#town-list div.selected').data('id') || $(formEl).find('#town-input').val() || null
     };
 }
 

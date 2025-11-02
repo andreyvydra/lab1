@@ -5,6 +5,7 @@ import itmo.is.lab1.models.person.enums.Country;
 import itmo.is.lab1.services.common.requests.GeneralEntityRequest;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -27,6 +28,10 @@ public class PersonRequest extends GeneralEntityRequest {
     @NotNull(message = "passportId не может быть null.")
     private String passportID; //Значение этого поля должно быть уникальным, Поле не может быть null
 
-    private Country nationality; //Поле может быть null
+    private Country nationality; //
+
+    @NotNull(message = "height не должно быть null.")
+    @Positive(message = "height должно быть больше 0")
+    private Float height;
 
 }

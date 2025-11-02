@@ -4,9 +4,10 @@ package itmo.is.lab1.models.location;
 import itmo.is.lab1.models.GeneralEntity;
 import itmo.is.lab1.models.user.User;
 import itmo.is.lab1.services.location.requests.CoordinatesRequest;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import itmo.is.lab1.models.product.Product;
+import java.util.ArrayList;
+import java.util.List;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -35,3 +36,6 @@ public class Coordinates extends GeneralEntity<CoordinatesRequest> {
         y = request.getY();
     }
 }
+
+
+
