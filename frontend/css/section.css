@@ -149,7 +149,7 @@ td {
     display: flex;
     flex-direction: column;
     max-width: 600px;
-    max-height: 200px;
+    max-height: 300px;
     width: 100%;
     border: coral 3px solid;
     text-align: center;

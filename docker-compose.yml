@@ -37,6 +37,8 @@ services:
       - web-network
     depends_on:
       - spring-web
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
 
 networks:
   web-network:

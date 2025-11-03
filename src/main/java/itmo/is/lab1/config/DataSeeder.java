@@ -54,6 +54,12 @@ public class DataSeeder implements ApplicationRunner {
         u.setRole(Role.ROLE_USER);
         users.add(u);
 
+        User ad = new User();
+        ad.setUsername("admin");
+        ad.setPassword(passwordEncoder.encode("admin"));
+        ad.setRole(Role.ROLE_ADMIN);
+        userRepository.save(ad);
+
         users = userRepository.saveAll(users);
 
         List<Coordinates> coords = new ArrayList<>();

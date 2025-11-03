@@ -13,6 +13,7 @@ module.exports = {
         organization: './js/organization.js',
         address: './js/address.js',
         coordinates: './js/coordinates.js',
+        specialActions: './js/specialActions.js',
         adminRequests: './js/adminRequests.js',
         importHistory: './js/importHistory.js'
     },
@@ -120,6 +121,11 @@ module.exports = {
             template: './html/import_history.html',
             filename: './import_history.html',
             chunks: ['importHistory']
+        }),
+        new HtmlWebpackPlugin({
+            template: './html/special_actions.html',
+            filename: './special_actions.html',
+            chunks: ['specialActions']
         })
     ]
 }

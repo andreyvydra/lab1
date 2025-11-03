@@ -23,7 +23,8 @@ const servicePages = [
     'address.html',
     'coordinates.html',
     'admin_requests.html',
-    'import_history.html'
+    'import_history.html',
+    'special_actions.html'
 ]
 
 export function redirect(path) {

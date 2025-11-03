@@ -9,6 +9,7 @@ export const infoStatus = "info";
 export const minPageCount = 5;
 
 // API constants
-export const baseUrl = 'http://localhost:8081'
+// Use same-origin. Nginx will proxy to backend.
+export const baseUrl = 'http://localhost:15378'
 export const authUrl = '/auth';
 export const apiUrl = '/api';

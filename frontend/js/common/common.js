@@ -16,7 +16,12 @@ export function common(table) {
         setTokenToCookie('');
         window.location.href = '/login.html';
     });
-    if (decoded.payload.role === "ROLE_ADMIN") {
+    const isAdmin = decoded.payload.role === "ROLE_ADMIN";
+    // toggle admin-only nav items
+    const importNav = $('nav a[href="./import_history.html"]').closest('li');
+    if (importNav.length) importNav.css('display', isAdmin ? 'list-item' : 'none');
+
+    if (isAdmin) {
         $("#admin-requests-button").css("display", "block");
     } else {
         $("#send-application-for-admin").css("display", "block");
