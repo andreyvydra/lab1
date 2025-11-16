@@ -99,6 +99,7 @@ public class DataSeeder implements ApplicationRunner {
             p.setPassportID("PASS-" + i);
             p.setIsChangeable(true);
             p.setUser(users.get(rnd.nextInt(users.size())));
+            p.setHeight(5);
             persons.add(p);
         }
         persons = personRepository.saveAll(persons);

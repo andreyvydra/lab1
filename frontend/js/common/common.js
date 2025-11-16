@@ -17,9 +17,6 @@ export function common(table) {
         window.location.href = '/login.html';
     });
     const isAdmin = decoded.payload.role === "ROLE_ADMIN";
-    // toggle admin-only nav items
-    const importNav = $('nav a[href="./import_history.html"]').closest('li');
-    if (importNav.length) importNav.css('display', isAdmin ? 'list-item' : 'none');
 
     if (isAdmin) {
         $("#admin-requests-button").css("display", "block");

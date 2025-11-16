@@ -62,7 +62,7 @@ public class ChangePersonTest {
                                 throughputTimer(120)
                         ),
 
-                threadGroup("GET_PERSON_THREAD_GROUP", 1, 100)
+                threadGroup("GET_PERSON_THREAD_GROUP", 1, 1)
                         .children(
                                 jsr223Action(SelectCredentials.class),
 
@@ -78,8 +78,11 @@ public class ChangePersonTest {
                                                         jsr223PostProcessor(s -> {
                                                             JsonObject jsonObject = new Gson().fromJson(s.prev.getResponseDataAsString(), JsonObject.class);
                                                             JsonArray jsonArray = jsonObject.get("content").getAsJsonArray();
-                                                            for (JsonElement jsonElement : jsonArray) {
-                                                                entities.add(jsonElement.toString());
+                                                            if (!jsonArray.isEmpty()) {
+                                                                JsonElement first = jsonArray.get(0);
+                                                                for (int i = 0; i < 20; i++) {
+                                                                    entities.add(first.toString());
+                                                                }
                                                             }
                                                         })
                                                 )

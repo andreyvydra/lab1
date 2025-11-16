@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Адреса</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
 <body>
 <div class="wrapper">
@@ -16,21 +16,21 @@
       <div class="diamond"></div>
     </div>
     <div class="login-container">
-      <button id="send-application-for-admin">Заявка на админку</button>
+      <button id="send-application-for-admin">Заявка на права администратора</button>
       <a id="login" href="./login.html">Войти</a>
     </div>
   </header>
   <nav>
     <ul>
       <li><a href="./location.html">Локации</a></li>
-      <li><a href="./person.html">Пользователи</a></li>
+      <li><a href="./person.html">Люди</a></li>
       <li><a href="./product.html">Продукты</a></li>
       <li><a href="./organization.html">Организации</a></li>
       <li><a href="./address.html" class="active">Адреса</a></li>
       <li><a href="./coordinates.html">Координаты</a></li>
       <li><a href="./import_history.html">Импорт</a></li>
-      <li><a href="./special_actions.html">Действия</a></li>
-      <li id="admin-requests-button"><a href="./admin_requests.html">Заявки в админы</a></li>
+      <li><a href="./special_actions.html">Специальные действия</a></li>
+      <li id="admin-requests-button"><a href="./admin_requests.html">Заявки на администратора</a></li>
     </ul>
   </nav>
   <section>
@@ -48,7 +48,7 @@
           <tr>
             <th data-name="id">ID</th>
             <th data-name="isChangeable">Изменяемый</th>
-            <th data-name="user">Владелец записи</th>
+            <th data-name="user">Пользователь</th>
             <th data-name="street">Улица</th>
             <th data-name="town">Город</th>
             <th>Действия</th>
@@ -73,9 +73,10 @@
 <div id="update-modal" class="modal">
   <div class="modal-content">
     <span class="close">&times;</span>
-    <h2>Обновить адрес</h2>
+    <h2>Редактирование адреса</h2>
     <div id="update-modal-content"></div>
   </div>
-  </div>
+</div>
 </body>
 </html>
+

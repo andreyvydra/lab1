@@ -2,8 +2,8 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Пользователи</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Люди</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
 <body>
 <div class="wrapper">
@@ -11,34 +11,34 @@
     <div class="center-container">
       <div class="diamond"></div>
       <div class="header-info">
-        <h2>Пользователи</h2>
+        <h2>Люди</h2>
       </div>
       <div class="diamond"></div>
     </div>
     <div class="login-container">
-      <button id="send-application-for-admin">Заявка на админку</button>
+      <button id="send-application-for-admin">Заявка на права администратора</button>
       <a id="login" href="./login.html">Войти</a>
     </div>
   </header>
   <nav>
     <ul>
       <li><a href="./location.html">Локации</a></li>
-      <li><a href="./person.html" class="active">Пользователи</a></li>
+      <li><a href="./person.html" class="active">Люди</a></li>
       <li><a href="./product.html">Продукты</a></li>
       <li><a href="./organization.html">Организации</a></li>
       <li><a href="./address.html">Адреса</a></li>
       <li><a href="./coordinates.html">Координаты</a></li>
       <li><a href="./import_history.html">Импорт</a></li>
-      <li><a href="./special_actions.html">Действия</a></li>
-      <li id="admin-requests-button"><a href="./admin_requests.html">Заявки в админы</a></li>
+      <li><a href="./special_actions.html">Специальные действия</a></li>
+      <li id="admin-requests-button"><a href="./admin_requests.html">Заявки на администратора</a></li>
     </ul>
   </nav>
   <section>
     <article class="upload-article">
       <div class="block upload">
-        <h2>Загрузка из XLSX</h2>
-        <form id="upload-xlsx-form">
-          <input class="submit-button" type="file" id="xlsx-file" name="xlsx-file" accept=".xlsx" required>
+        <h2>Загрузка людей из CSV</h2>
+        <form id="upload-csv-form">
+          <input class="submit-button" type="file" id="csv-file" name="csv-file" accept=".csv" required>
           <button class="submit-button" type="submit">Загрузить</button>
         </form>
       </div>
@@ -57,14 +57,14 @@
           <tr>
             <th data-name="id">ID</th>
             <th data-name="isChangeable">Изменяемый</th>
-            <th data-name="user">Владелец записи</th>
+            <th data-name="user">Владелец</th>
             <th data-name="name">Имя</th>
             <th data-name="eyeColor">Цвет глаз</th>
             <th data-name="hairColor">Цвет волос</th>
             <th data-name="location">Локация</th>
             <th data-name="passportID">Паспорт</th>
             <th data-name="nationality">Национальность</th>
-            <th data-name="height">Высота</th>
+            <th data-name="height">Рост</th>
             <th>Действия</th>
           </tr>
           </thead>
@@ -86,12 +86,13 @@
 </div>
 
 <div id="update-modal" class="modal">
-  <div class="modal-content" >
+  <div class="modal-content">
     <span class="close">&times;</span>
-    <h2>Обновить запись</h2>
+    <h2>Редактирование человека</h2>
     <div id="update-modal-content"></div>
   </div>
 </div>
 
 </body>
 </html>
+

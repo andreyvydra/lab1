@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Специальные действия</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
 <body>
 <div class="wrapper">
@@ -16,56 +16,57 @@
       <div class="diamond"></div>
     </div>
     <div class="login-container">
-      <button id="send-application-for-admin">Отправить заявку на админа</button>
-      <a id="login" href="./login.html">Выйти</a>
+      <button id="send-application-for-admin">Заявка на права администратора</button>
+      <a id="login" href="./login.html">Войти</a>
     </div>
   </header>
   <nav>
     <ul>
       <li><a href="./location.html">Локации</a></li>
-      <li><a href="./person.html">Персоны</a></li>
+      <li><a href="./person.html">Люди</a></li>
       <li><a href="./product.html">Продукты</a></li>
       <li><a href="./organization.html">Организации</a></li>
       <li><a href="./address.html">Адреса</a></li>
       <li><a href="./coordinates.html">Координаты</a></li>
       <li><a href="./import_history.html">Импорт</a></li>
-      <li><a href="./special_actions.html" class="active">Действия</a></li>
-      <li id="admin-requests-button"><a href="./admin_requests.html">Заявки на админа</a></li>
+      <li><a href="./special_actions.html" class="active">Специальные действия</a></li>
+      <li id="admin-requests-button"><a href="./admin_requests.html">Заявки на администратора</a></li>
     </ul>
   </nav>
   <section>
     <article class="functions-article">
       <div class="block functions">
+        <!-- Тексты функций оставлены как есть, важны id -->
         <div class="function-container">
-          <label for="sa-delete-by-owner">Удалить продукт по владельцу (ID):</label>
+          <label for="sa-delete-by-owner">Удалить продукты по владельцу (ID):</label>
           <input type="number" id="sa-delete-by-owner" placeholder="ID владельца">
-          <button id="sa-btn-delete-by-owner">Выполнить</button>
+          <button id="sa-btn-delete-by-owner">Удалить</button>
         </div>
         <div class="function-container">
-          <label for="sa-starts-with">Найти продукты по префиксу имени:</label>
-          <input type="text" id="sa-starts-with" placeholder="Префикс имени">
-          <button id="sa-btn-starts-with">Искать</button>
+          <label for="sa-starts-with">Найти продукты с названием, начинающимся с:</label>
+          <input type="text" id="sa-starts-with" placeholder="Префикс названия">
+          <button id="sa-btn-starts-with">Найти</button>
         </div>
         <div class="function-container">
           <label for="sa-rating-less">Найти продукты с рейтингом меньше:</label>
-          <input type="number" id="sa-rating-less" placeholder="Макс. рейтинг">
-          <button id="sa-btn-rating-less">Искать</button>
+          <input type="number" id="sa-rating-less" placeholder="Максимальный рейтинг">
+          <button id="sa-btn-rating-less">Найти</button>
         </div>
         <div class="function-container">
           <label for="sa-by-manufacturer">Найти продукты по производителю (ID):</label>
           <input type="number" id="sa-by-manufacturer" placeholder="ID производителя">
-          <button id="sa-btn-by-manufacturer">Искать</button>
+          <button id="sa-btn-by-manufacturer">Найти</button>
         </div>
         <div class="function-container">
           <label for="sa-by-unit">Найти продукты по единице измерения:</label>
           <select id="sa-by-unit">
-            <option value="">—</option>
+            <option value="">--</option>
             <option value="KILOGRAMS">KILOGRAMS</option>
             <option value="CENTIMETERS">CENTIMETERS</option>
             <option value="PCS">PCS</option>
             <option value="GRAMS">GRAMS</option>
           </select>
-          <button id="sa-btn-by-unit">Искать</button>
+          <button id="sa-btn-by-unit">Найти</button>
         </div>
       </div>
     </article>
@@ -74,9 +75,18 @@
         <table class="table-results">
           <thead>
           <tr>
-            <th>ID</th><th>Изм.</th><th>Пользователь</th><th>Имя</th>
-            <th>Координаты</th><th>Создано</th><th>Производитель</th><th>Ед.</th>
-            <th>Цена</th><th>Себестоимость</th><th>Рейтинг</th><th>Владелец</th>
+            <th>ID</th>
+            <th>Изм.</th>
+            <th>Пользователь</th>
+            <th>Название</th>
+            <th>Координаты</th>
+            <th>Дата создания</th>
+            <th>Производитель</th>
+            <th>Ед.</th>
+            <th>Цена</th>
+            <th>Себестоимость</th>
+            <th>Рейтинг</th>
+            <th>Владелец</th>
           </tr>
           </thead>
           <tbody id="sa-results-body"></tbody>

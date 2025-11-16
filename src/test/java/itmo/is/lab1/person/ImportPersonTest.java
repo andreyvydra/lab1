@@ -1,8 +1,8 @@
 package itmo.is.lab1.person;
 
-import com.google.gson.JsonObject;
 import itmo.is.lab1.fragments.SelectCredentials;
 import itmo.is.lab1.helpers.AuthorizationHelper;
+import org.apache.http.entity.ContentType;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import us.abstracta.jmeter.javadsl.core.engines.EmbeddedJmeterEngine;
@@ -15,7 +15,8 @@ import static itmo.is.lab1.helpers.ActionHelper.jsr223Action;
 import static itmo.is.lab1.helpers.CommonHelper.*;
 import static us.abstracta.jmeter.javadsl.JmeterDsl.*;
 
-public class AddPersonTest {
+
+public class ImportPersonTest {
 
     private final EmbeddedJmeterEngine embeddedJmeterEngine = new EmbeddedJmeterEngine();
 
@@ -24,34 +25,26 @@ public class AddPersonTest {
         AuthorizationHelper.auth("credentials.csv", embeddedJmeterEngine);
     }
 
-    @Test(testName = "AddPersonConflictTest")
+    @Test(testName = "ImportPersonTest")
     public void test() throws IOException, InterruptedException, TimeoutException {
+        String filePath = ImportPersonTest.class
+                .getClassLoader()
+                .getResource("person.csv")
+                .getFile();
+
         testPlan(
                 getHttpDefaults(),
                 getCacheDisable(),
                 getHeadersDefaults(),
 
-                threadGroup("POST_ADD_PERSON_THREAD_GROUP", 4, 2)
+                threadGroup("POST_IMPORT_PERSON_THREAD_GROUP", 4, 2)
                         .children(
                                 jsr223Action(SelectCredentials.class),
-
-                                jsr223Action(s -> {
-                                    JsonObject body = new JsonObject();
-                                    body.addProperty("name", "ConcurrentAddPerson");
-                                    body.addProperty("eyeColor", "RED");
-                                    body.addProperty("hairColor", "GREEN");
-                                    body.addProperty("passportID", "PASS-CONFLICT-ADD");
-                                    body.addProperty("nationality", "FRANCE");
-                                    body.addProperty("height", 5.0);
-                                    body.addProperty("isChangeable", true);
-                                    s.vars.put("createBody", body.toString());
-                                }),
-
-                                httpSampler("ADD_PERSON_CONFLICT", "api/person")
+                                httpSampler("IMPORT_PERSON", "api/person/import")
                                         .method("POST")
                                         .encoding(StandardCharsets.UTF_8)
                                         .header("Authorization", "${access_token}")
-                                        .body("${createBody}")
+                                        .bodyFilePart("file", filePath, ContentType.MULTIPART_FORM_DATA)
                                         .children(
                                                 jsr223PostProcessor(s ->
                                                         s.prev.setDataEncoding(StandardCharsets.UTF_8.name()))
@@ -65,3 +58,4 @@ public class AddPersonTest {
         ).runIn(embeddedJmeterEngine);
     }
 }
+

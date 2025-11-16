@@ -17,6 +17,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.CannotAcquireLockException;
+import org.springframework.dao.CannotSerializeTransactionException;
+import org.springframework.dao.DeadlockLoserDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.data.domain.Page;
@@ -26,6 +28,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
@@ -48,7 +51,6 @@ public abstract class GeneralService<
     @Autowired
     protected SimpMessagingTemplate messagingTemplate;
 
-    @Transactional(isolation = Isolation.READ_COMMITTED)
     public PaginatedResponse<R> findAll(String filter, String sortField, Boolean ascending, Integer page, Integer size) {
         PageRequest pageRequest = PageRequest.of(
                 page,
@@ -74,7 +76,6 @@ public abstract class GeneralService<
 
     protected abstract R buildResponse(E element);
 
-    @Transactional(isolation = Isolation.READ_COMMITTED)
     public R findById(Long id) {
         Optional<E> location = repository.findById(id);
         if (location.isPresent()) {
@@ -83,16 +84,6 @@ public abstract class GeneralService<
         throw new NotFoundException();
     }
 
-    @Retryable(
-            value = {
-                    CannotAcquireLockException.class,
-                    OptimisticLockingFailureException.class,
-                    PessimisticLockingFailureException.class
-            },
-            maxAttempts = 5,
-            backoff = @Backoff(delay = 500, maxDelay = 5000, multiplier = 2.0, random = true)
-    )
-    @Transactional(isolation = Isolation.SERIALIZABLE)
     public GeneralMessageResponse deleteById(@NotNull Long id) {
         E entity = getOwnedEntityById(id);
         repository.delete(entity);
@@ -102,16 +93,6 @@ public abstract class GeneralService<
     }
 
 
-    @Retryable(
-            value = {
-                    CannotAcquireLockException.class,
-                    OptimisticLockingFailureException.class,
-                    PessimisticLockingFailureException.class
-            },
-            maxAttempts = 5,
-            backoff = @Backoff(delay = 500, maxDelay = 5000, multiplier = 2.0, random = true)
-    )
-    @Transactional(isolation = Isolation.SERIALIZABLE)
     public R create(@NotNull T request) {
         E entity = buildEntity(request);
         repository.save(entity);
@@ -121,19 +102,8 @@ public abstract class GeneralService<
 
     protected abstract E buildEntity(T request);
 
-    @Retryable(
-            value = {
-                    CannotAcquireLockException.class,
-                    OptimisticLockingFailureException.class,
-                    PessimisticLockingFailureException.class
-            },
-            maxAttempts = 5,
-            backoff = @Backoff(delay = 500, maxDelay = 5000, multiplier = 2.0, random = true)
-    )
-    @Transactional(isolation = Isolation.SERIALIZABLE)
     public R updateById(@NotNull Long id, @NotNull T request) {
         E entity = getOwnedEntityById(id);
-        entity.setValues(request, entity.getUser());
         repository.save(entity);
         messagingTemplate.convertAndSend("/topic/entities", buildResponse(entity));
         return buildResponse(entity);
@@ -147,11 +117,13 @@ public abstract class GeneralService<
         }
 
         if (entity == null) {
+            System.out.println(123);
             throw new NotFoundException();
         }
 
         if (!(entity.getIsChangeable() && userService.getCurrentUser().getRole() == Role.ROLE_ADMIN)
                 && entity.getUser() != userService.getCurrentUser()) {
+            System.out.println(456);
             throw new ForbiddenException();
         }
         return entity;

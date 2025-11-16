@@ -2,5 +2,5 @@ FROM amazoncorretto:17-alpine-jdk
 ENV DB_HOST="db-postgres"
 WORKDIR /app
 COPY ./target/lab1-0.0.1-SNAPSHOT.war /app/lab1-0.0.1-SNAPSHOT.war
-EXPOSE 8080
+EXPOSE 15378
 CMD ["java", "-jar", "/app/lab1-0.0.1-SNAPSHOT.war"]

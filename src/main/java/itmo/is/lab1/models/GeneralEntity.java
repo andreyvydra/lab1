@@ -31,6 +31,8 @@ public abstract class GeneralEntity<R extends GeneralEntityRequest> implements S
 
     public void setValues(R request, User user) {
         isChangeable = request.getIsChangeable();
-        this.user = user;
+        if (this.user == null) {
+            this.user = user;
+        }
     }
 }

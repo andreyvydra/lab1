@@ -15,23 +15,24 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class PersonRequest extends GeneralEntityRequest {
 
-    @NotNull(message = "name не может быть null.")
-    @NotBlank(message = "name не может быть пустой.")
-    private String name; //Поле не может быть null, Строка не может быть пустой
-    private Color eyeColor; //Поле может быть null
+    @NotNull(message = "Поле 'name' не должно быть null.")
+    @NotBlank(message = "Поле 'name' не должно быть пустым.")
+    private String name;
 
-    @NotNull(message = "hairColor не может быть null.")
-    private Color hairColor; //Поле не может быть null
+    private Color eyeColor;
 
-    private Long location; //Поле может быть null
+    @NotNull(message = "Поле 'hairColor' не должно быть null.")
+    private Color hairColor;
 
-    @NotNull(message = "passportId не может быть null.")
-    private String passportID; //Значение этого поля должно быть уникальным, Поле не может быть null
+    private Long location;
 
-    private Country nationality; //
+    @NotNull(message = "Поле 'passportID' не должно быть null.")
+    private String passportID;
 
-    @NotNull(message = "height не должно быть null.")
-    @Positive(message = "height должно быть больше 0")
+    private Country nationality;
+
+    @NotNull(message = "Поле 'height' не должно быть null.")
+    @Positive(message = "Поле 'height' должно быть больше 0.")
     private Float height;
-
 }
+

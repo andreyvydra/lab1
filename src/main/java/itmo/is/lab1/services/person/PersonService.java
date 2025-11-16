@@ -16,41 +16,52 @@ import itmo.is.lab1.services.person.requests.PersonImportRequest;
 import itmo.is.lab1.services.person.requests.PersonRequest;
 import itmo.is.lab1.services.person.responses.PersonResponse;
 import jakarta.validation.ValidationException;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.CannotAcquireLockException;
-import org.springframework.dao.DataAccessException;
+import org.springframework.dao.CannotSerializeTransactionException;
+import org.springframework.dao.DeadlockLoserDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.dao.PessimisticLockingFailureException;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.TransactionSystemException;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.sql.SQLClientInfoException;
+import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 @Service
 public class PersonService extends GeneralService<PersonRequest, PersonResponse, Person, PersonRepository> {
+
     @Autowired
     private LocationService locationService;
+
     @Autowired
     private LocationRepository locationRepository;
+
     @Autowired
     private ImportHistoryService importHistoryService;
+
     @Autowired
     private ProductRepository productRepository;
 
@@ -70,18 +81,15 @@ public class PersonService extends GeneralService<PersonRequest, PersonResponse,
 
     @Override
     @Retryable(
-            value = {
-                    CannotAcquireLockException.class,
-                    OptimisticLockingFailureException.class,
-                    PessimisticLockingFailureException.class
-            },
-            maxAttempts = 5,
+            retryFor = SQLException.class,
+            maxAttempts = 10,
             backoff = @Backoff(delay = 500, maxDelay = 5000, multiplier = 2.0, random = true)
     )
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public PersonResponse create(PersonRequest request) {
+        validateNameAndLocationUnique(request.getName(), request.getLocation(), null);
         if (repository.existsPersonByPassportID(request.getPassportID())) {
-            throw new GeneralException(HttpStatus.BAD_REQUEST, "Паспорт с таким номером уже существует");
+            throw new GeneralException(HttpStatus.BAD_REQUEST, "Человек с таким паспортом уже существует.");
         }
         Person entity = buildEntity(request);
         repository.save(entity);
@@ -90,12 +98,20 @@ public class PersonService extends GeneralService<PersonRequest, PersonResponse,
     }
 
     @Override
+    @Retryable(
+            retryFor  = {
+                    SQLException.class,
+            },
+            maxAttempts = 10,
+            backoff = @Backoff(delay = 500, maxDelay = 5000, multiplier = 2.0, random = true)
+    )
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public PersonResponse updateById(Long id, PersonRequest request) {
         Person entity = getOwnedEntityById(id);
         if (repository.existsPersonByPassportIDAndIdNot(request.getPassportID(), id)) {
-            throw new GeneralException(HttpStatus.BAD_REQUEST, "Паспорт с таким номером уже существует");
+            throw new GeneralException(HttpStatus.BAD_REQUEST, "Человек с таким паспортом уже существует.");
         }
-        entity.setValues(request, entity.getUser());
+        validateNameAndLocationUnique(request.getName(), request.getLocation(), id);
         entity.setValues(request, locationService);
         repository.save(entity);
         messagingTemplate.convertAndSend("/topic/entities", buildResponse(entity));
@@ -103,73 +119,115 @@ public class PersonService extends GeneralService<PersonRequest, PersonResponse,
     }
 
     @Retryable(
-            value = {
-                    CannotAcquireLockException.class,
-                    OptimisticLockingFailureException.class,
-                    PessimisticLockingFailureException.class
-            },
-            maxAttempts = 5,
+            retryFor = SQLException.class,
+            maxAttempts = 10,
             backoff = @Backoff(delay = 500, maxDelay = 5000, multiplier = 2.0, random = true)
     )
     @Transactional(isolation = Isolation.SERIALIZABLE)
-    public void importFromXlsx(MultipartFile file) throws IOException, ValidationException {
+    public int importFromCsv(MultipartFile file) throws IOException, ValidationException {
         List<Person> persons = new ArrayList<>();
         ImportHistory history = importHistoryService.startImport(userService.getCurrentUser());
+        Set<String> passportsInFile = new HashSet<>();
+        Set<String> compositeInFile = new HashSet<>();
+        int added = 0;
 
-        try (Workbook workbook = WorkbookFactory.create(file.getInputStream())) {
-            Sheet sheet = workbook.getSheetAt(0);
-            Iterator<Row> rowIterator = sheet.iterator();
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream()));
+             CSVParser parser = CSVFormat.DEFAULT
+                     .withFirstRecordAsHeader()
+                     .withIgnoreHeaderCase()
+                     .withTrim()
+                     .parse(reader)) {
 
-            if (rowIterator.hasNext()) {
-                rowIterator.next();
-            }
-
-            while (rowIterator.hasNext()) {
-                Row row = rowIterator.next();
-                PersonImportRequest request = parseRowToPersonRequest(row);
+            for (CSVRecord record : parser) {
+                PersonImportRequest request = parseCsvToPersonRequest(record);
                 validatePersonRequest(request);
+
+                if (!passportsInFile.add(request.getPassportID())) {
+                    throw new GeneralException(
+                            HttpStatus.BAD_REQUEST,
+                            "Паспорт " + request.getPassportID() + " встречается в файле более одного раза."
+                    );
+                }
+
+                String compositeKey = request.getName() + "|" + request.getX() + "|" + request.getY() + "|" + request.getNameLoc();
+                if (!compositeInFile.add(compositeKey)) {
+                    throw new GeneralException(
+                            HttpStatus.BAD_REQUEST,
+                            "Комбинация полей (name, x, y, nameLoc) для (" +
+                                    request.getName() + ", " + request.getX() + ", " +
+                                    request.getY() + ", " + request.getNameLoc() +
+                                    ") встречается в файле более одного раза."
+                    );
+                }
+
+                if (repository.existsPersonByPassportID(request.getPassportID())) {
+                    throw new GeneralException(
+                            HttpStatus.BAD_REQUEST,
+                            "Человек с паспортом " + request.getPassportID() + " уже существует."
+                    );
+                }
+
+                Specification<Person> compositeSpec = (root, query, cb) -> {
+                    var loc = root.join("location");
+                    return cb.and(
+                            cb.equal(root.get("name"), request.getName()),
+                            cb.equal(loc.get("x"), request.getX()),
+                            cb.equal(loc.get("y"), request.getY()),
+                            cb.equal(loc.get("name"), request.getNameLoc())
+                    );
+                };
+                if (repository.count(compositeSpec) > 0) {
+                    throw new GeneralException(
+                            HttpStatus.BAD_REQUEST,
+                            "Персона с комбинацией полей (name, x, y, nameLoc) уже существует в системе."
+                    );
+                }
+
                 Person person = buildPersonFromRequest(request);
                 persons.add(person);
+                added++;
             }
 
-            locationRepository.saveAll(persons.stream().map(Person::getLocation).collect(Collectors.toList()));
-            repository.saveAll(persons);
-            importHistoryService.finishImport(history, "SUCCESS", persons.size());
-            messagingTemplate.convertAndSend("/topic/entities", "Imported from XLSX");
+            if (!persons.isEmpty()) {
+                locationRepository.saveAll(persons.stream().map(Person::getLocation).toList());
+                repository.saveAll(persons);
+            }
+            importHistoryService.finishImport(history, "SUCCESS", added);
+            messagingTemplate.convertAndSend("/topic/entities", "Imported from CSV");
+            return added;
         } catch (Exception e) {
             importHistoryService.finishImport(history, "FAILED", 0);
             throw e;
         }
     }
 
-    private PersonImportRequest parseRowToPersonRequest(Row row) {
+    private PersonImportRequest parseCsvToPersonRequest(CSVRecord record) {
         PersonImportRequest request = new PersonImportRequest();
-        request.setName(row.getCell(0).getStringCellValue());
-        request.setEyeColor(Color.valueOf(row.getCell(1).getStringCellValue()));
-        request.setHairColor(Color.valueOf(row.getCell(2).getStringCellValue()));
-        request.setPassportID(row.getCell(3).getStringCellValue());
-        request.setNationality(Country.valueOf(row.getCell(4).getStringCellValue()));
-        request.setIsChangeable(Boolean.valueOf(row.getCell(5).getStringCellValue()));
-
-        request.setX((int) row.getCell(6).getNumericCellValue());
-        request.setY((long) row.getCell(7).getNumericCellValue());
-        request.setNameLoc(row.getCell(8).getStringCellValue());
-
+        request.setName(record.get("name"));
+        request.setEyeColor(Color.valueOf(record.get("eyeColor")));
+        request.setHairColor(Color.valueOf(record.get("hairColor")));
+        request.setPassportID(record.get("passportID"));
+        request.setNationality(Country.valueOf(record.get("nationality")));
+        request.setIsChangeable(Boolean.valueOf(record.get("isChangeable")));
+        request.setHeight(Float.valueOf(record.get("height")));
+        request.setX(Integer.valueOf(record.get("x")));
+        request.setY(Long.valueOf(record.get("y")));
+        request.setNameLoc(record.get("nameLoc"));
         return request;
     }
 
     private void validatePersonRequest(@Validated PersonImportRequest request) throws ValidationException {
         if (request.getName() == null || request.getName().isEmpty()) {
-            throw new GeneralException(HttpStatus.BAD_REQUEST, "Поле 'name' не может быть пустым.");
+            throw new GeneralException(HttpStatus.BAD_REQUEST, "Поле 'name' не должно быть пустым.");
         }
         if (request.getHairColor() == null) {
-            throw new GeneralException(HttpStatus.BAD_REQUEST, "Поле 'hairColor' не может быть пустым.");
+            throw new GeneralException(HttpStatus.BAD_REQUEST, "Поле 'hairColor' не должно быть пустым.");
         }
         if (request.getPassportID() == null || request.getPassportID().isEmpty()) {
-            throw new GeneralException(HttpStatus.BAD_REQUEST, "Поле 'passportID' не может быть пустым.");
+            throw new GeneralException(HttpStatus.BAD_REQUEST, "Поле 'passportID' не должно быть пустым.");
         }
-        while (repository.existsPersonByPassportID(request.getPassportID())) {
-            request.setPassportID(UUID.randomUUID().toString());
+        if (request.getHeight() == null) {
+            throw new GeneralException(HttpStatus.BAD_REQUEST, "Поле 'height' не должно быть пустым.");
         }
     }
 
@@ -181,7 +239,7 @@ public class PersonService extends GeneralService<PersonRequest, PersonResponse,
         Location location = new Location();
         location.setX(request.getX());
         location.setY(request.getY());
-        location.setName(request.getName());
+        location.setName(request.getNameLoc());
         location.setIsChangeable(request.getIsChangeable());
         location.setUser(userService.getCurrentUser());
 
@@ -190,12 +248,30 @@ public class PersonService extends GeneralService<PersonRequest, PersonResponse,
         return person;
     }
 
+    private void validateNameAndLocationUnique(String name, Long locationId, Long currentPersonId) {
+        if (name == null || locationId == null) {
+            return;
+        }
+        boolean exists;
+        if (currentPersonId == null) {
+            exists = Boolean.TRUE.equals(repository.existsByNameAndLocation_Id(name, locationId));
+        } else {
+            exists = Boolean.TRUE.equals(repository.existsByNameAndLocation_IdAndIdNot(name, locationId, currentPersonId));
+        }
+        if (exists) {
+            throw new GeneralException(HttpStatus.BAD_REQUEST, "Комбинация полей 'name' и 'location' должна быть уникальной.");
+        }
+    }
 
     @Override
-    @org.springframework.transaction.annotation.Transactional
+    @Retryable(
+            retryFor = SQLException.class,
+            maxAttempts = 10,
+            backoff = @Backoff(delay = 500, maxDelay = 5000, multiplier = 2.0, random = true)
+    )
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public itmo.is.lab1.services.common.responses.GeneralMessageResponse deleteById(Long id) {
         productRepository.deleteByOwner_Id(id);
         return super.deleteById(id);
     }
 }
-

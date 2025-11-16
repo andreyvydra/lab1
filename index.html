@@ -9,14 +9,13 @@
 </head>
 <body>
 <h1>WebSocket Chat</h1>
-<div id="response"></div>  <!-- Место для вывода сообщений -->
+<div id="response"></div>
 <input type="text" id="message" placeholder="Введите сообщение...">
 <button id="sendButton">Отправить</button>
 <script>
-    var socket = new SockJS('http://localhost:8081/ws');  // Адрес вашего WebSocket эндпоинта
-    var stompClient = Stomp.over(socket);  // Создаем STOMP клиента
+    var socket = new SockJS('http://localhost:8081/ws');
+    var stompClient = Stomp.over(socket);
 
-    // Функция для подключения к серверу
     function connect() {
         stompClient.connect({}, function (frame) {
             console.log('Подключено: ' + frame);
@@ -24,19 +23,17 @@
             // Подписываемся на тему
             stompClient.subscribe('/topic/entities', function (messageOutput) {
                 alert(messageOutput);
-                showMessage(JSON.parse(messageOutput.body));  // Обрабатываем полученное сообщение
+                showMessage(JSON.parse(messageOutput.body));
             });
         });
     }
 
-    // Функция для отображения сообщения на веб-странице
     function showMessage(message) {
         var response = document.getElementById("response");
         console.log(message)
-        response.innerHTML += "<p>" + JSON.stringify(message) + "</p>";  // Добавляем сообщение на страницу
+        response.innerHTML += "<p>" + JSON.stringify(message) + "</p>";
     }
 
-    // Подключаемся к серверу при загрузке страницы
     window.onload = function() {
         connect();
     };

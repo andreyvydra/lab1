@@ -17,10 +17,10 @@ public class CommonHelper {
         return httpDefaults()
                 .protocol("http")
                 .host("localhost")
-                .port(8081)
+                .port(15378)
                 .encoding(StandardCharsets.UTF_8)
                 .connectionTimeout(Duration.ofSeconds(5))
-                .responseTimeout(Duration.ofSeconds(30));
+                .responseTimeout(Duration.ofSeconds(60));
     }
 
     public static DslCacheManager getCacheDisable() {

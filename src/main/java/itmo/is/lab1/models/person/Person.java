@@ -6,14 +6,22 @@ import itmo.is.lab1.models.person.enums.Color;
 import itmo.is.lab1.models.person.enums.Country;
 import itmo.is.lab1.services.location.LocationService;
 import itmo.is.lab1.services.person.requests.PersonRequest;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ForeignKey;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import java.util.Optional;
 
+import java.util.Optional;
 
 @Getter
 @Setter
@@ -21,32 +29,32 @@ import java.util.Optional;
 @Entity
 @Table(name = "person")
 public class Person extends GeneralEntity<PersonRequest> {
-    @NotNull(message = "name не может быть null.")
-    @NotBlank(message = "person не может быть пустым")
+
+    @NotNull(message = "Поле 'name' не должно быть null.")
+    @NotBlank(message = "Поле 'name' не должно быть пустым.")
     @Column(nullable = false)
-    private String name; //Поле не может быть null, Строка не может быть пустой
+    private String name;
 
     @Enumerated(EnumType.STRING)
-    private Color eyeColor; //Поле может быть null
+    private Color eyeColor;
 
-    @NotNull(message = "hairColor не может быть null")
+    @NotNull(message = "Поле 'hairColor' не должно быть null.")
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private Color hairColor; //Поле не может быть null
+    private Color hairColor;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "location_id", nullable = true, foreignKey = @ForeignKey(name = "fk_person_location_id"))
-    private Location location; //Поле не может быть null
+    private Location location;
 
-    @NotNull(message = "hairColor не может быть null")
+    @NotNull(message = "Поле 'passportID' не должно быть null.")
     @Column(nullable = false, unique = true)
-    private String passportID; //Значение этого поля должно быть уникальным, Поле не может быть null
+    private String passportID;
 
     private float height;
 
     @Enumerated(EnumType.STRING)
-    private Country nationality; //Поле может быть null
-
+    private Country nationality;
 
     public void setValues(PersonRequest request, LocationService service) {
         super.setValues(request, service.getUserService().getCurrentUser());
@@ -62,7 +70,4 @@ public class Person extends GeneralEntity<PersonRequest> {
         this.height = request.getHeight();
     }
 }
-
-
-
 

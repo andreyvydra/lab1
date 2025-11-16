@@ -1,85 +1,86 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <title>Локации</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <title>Локации</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
 <body>
-    <div class="wrapper">
-        <header>
-            <div class="center-container">
-                <div class="diamond"></div>
-                <div class="header-info">
-                    <h2>Локации</h2>
-                </div>
-                <div class="diamond"></div>
-            </div>
-            <div class="login-container">
-                <button id="send-application-for-admin">Заявка на админку</button>
-                <a id="login" href="./login.html">Войти</a>
-            </div>
-        </header>
-        <nav>
-          <ul>
-            <li><a href="./location.html" class="active">Локации</a></li>
-            <li><a href="./person.html">Пользователи</a></li>
-            <li><a href="./product.html">Продукты</a></li>
-            <li><a href="./organization.html">Организации</a></li>
-            <li><a href="./address.html">Адреса</a></li>
-            <li><a href="./coordinates.html">Координаты</a></li>
-            <li><a href="./import_history.html">Импорт</a></li>
-      <li><a href="./special_actions.html">Действия</a></li>
-      <li id="admin-requests-button"><a href="./admin_requests.html">Заявки в админы</a></li>
+<div class="wrapper">
+  <header>
+    <div class="center-container">
+      <div class="diamond"></div>
+      <div class="header-info">
+        <h2>Локации</h2>
+      </div>
+      <div class="diamond"></div>
+    </div>
+    <div class="login-container">
+      <button id="send-application-for-admin">Заявка на права администратора</button>
+      <a id="login" href="./login.html">Войти</a>
+    </div>
+  </header>
+  <nav>
+    <ul>
+      <li><a href="./location.html" class="active">Локации</a></li>
+      <li><a href="./person.html">Люди</a></li>
+      <li><a href="./product.html">Продукты</a></li>
+      <li><a href="./organization.html">Организации</a></li>
+      <li><a href="./address.html">Адреса</a></li>
+      <li><a href="./coordinates.html">Координаты</a></li>
+      <li><a href="./import_history.html">Импорт</a></li>
+      <li><a href="./special_actions.html">Специальные действия</a></li>
+      <li id="admin-requests-button"><a href="./admin_requests.html">Заявки на администратора</a></li>
     </ul>
-        </nav>
-        <section>
-            <article class="input-article">
-                <div id="input-article" class="block input"></div>
-            </article>
-            <article class="table-article">
-                <div class="block results">
-                    <label>
-                        Поиск:
-                        <input id="search-input">
-                    </label>
-                    <table class="table-results">
-                        <thead>
-                        <tr>
-                            <th data-name="id">ID</th>
-                            <th data-name="isChangeable">Изменяемый</th>
-                            <th data-name="user">Владелец записи</th>
-                            <th data-name="x">X</th>
-                            <th data-name="y">Y</th>
-                            <th data-name="z">Z</th>
-                            <th data-name="name">Название</th>
-                            <th>Действия</th>
-                        </tr>
-                        </thead>
-                        <tbody id="pagination-table-body"></tbody>
-                    </table>
-                    <div id="pagination-button-container"></div>
-                    <div id="page-size-button-container">
-                        <label for="page-size">Размер страницы: </label>
-                        <select id="page-size">
-                            <option value="5">5</option>
-                            <option value="10" selected>10</option>
-                            <option value="20">20</option>
-                            <option value="50">50</option>
-                        </select>
-                    </div>
-                </div>
-            </article>
-        </section>
-    </div>
-
-    <div id="update-modal" class="modal">
-        <div class="modal-content" >
-            <span class="close">&times;</span>
-            <h2>Обновить локацию</h2>
-            <div id="update-modal-content"></div>
+  </nav>
+  <section>
+    <article class="input-article">
+      <div id="input-article" class="block input"></div>
+    </article>
+    <article class="table-article">
+      <div class="block results">
+        <label>
+          Поиск:
+          <input id="search-input">
+        </label>
+        <table class="table-results">
+          <thead>
+          <tr>
+            <th data-name="id">ID</th>
+            <th data-name="isChangeable">Изменяемый</th>
+            <th data-name="user">Пользователь</th>
+            <th data-name="x">X</th>
+            <th data-name="y">Y</th>
+            <th data-name="z">Z</th>
+            <th data-name="name">Название локации</th>
+            <th>Действия</th>
+          </tr>
+          </thead>
+          <tbody id="pagination-table-body"></tbody>
+        </table>
+        <div id="pagination-button-container"></div>
+        <div id="page-size-button-container">
+          <label for="page-size">Размер страницы: </label>
+          <select id="page-size">
+            <option value="5">5</option>
+            <option value="10" selected>10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+          </select>
         </div>
-    </div>
+      </div>
+    </article>
+  </section>
+</div>
+
+<div id="update-modal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2>Редактирование локации</h2>
+    <div id="update-modal-content"></div>
+  </div>
+</div>
 
 </body>
 </html>
+

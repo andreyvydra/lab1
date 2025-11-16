@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -31,7 +32,7 @@ public class ImportHistoryService {
     @Autowired
     private UserService userService;
 
-    @Transactional(propagation = Propagation.MANDATORY)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public ImportHistory startImport(User user) {
         ImportHistory history = new ImportHistory();
         history.setUser(user);
@@ -40,7 +41,7 @@ public class ImportHistoryService {
         return importHistoryRepository.save(history);
     }
 
-    @Transactional(propagation = Propagation.MANDATORY)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void finishImport(ImportHistory history, String status, Integer addedObjects) {
         history.setEndTime(LocalDateTime.now());
         history.setStatus(status);
@@ -56,17 +57,18 @@ public class ImportHistoryService {
                 ascending ? Sort.by(sortField).ascending() : Sort.by(sortField).descending()
         );
 
-        Page<ImportHistory> resultPage;
+        Specification<ImportHistory> filterSpec = GeneralSpecification.filterByMultipleFields(filter);
+        Specification<ImportHistory> spec;
         if (userService.getCurrentUser().getRole().equals(Role.ROLE_ADMIN)) {
-            resultPage = importHistoryRepository.findAll(
-                    GeneralSpecification.filterByMultipleFields(filter), pageRequest
-            );
+            spec = filterSpec;
         } else {
-            resultPage = importHistoryRepository.findByUser(
-                    userService.getCurrentUser(),
-                    GeneralSpecification.filterByMultipleFields(filter), pageRequest
-            );
+            User current = userService.getCurrentUser();
+            Specification<ImportHistory> userSpec =
+                    (root, query, cb) -> cb.equal(root.get("user"), current);
+            spec = filterSpec.and(userSpec);
         }
+
+        Page<ImportHistory> resultPage = importHistoryRepository.findAll(spec, pageRequest);
 
         List<ImportHistoryResponse> content = resultPage.stream().map(this::buildResponse).collect(Collectors.toList());
 

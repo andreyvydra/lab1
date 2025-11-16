@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Организации</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
 <body>
 <div class="wrapper">
@@ -16,21 +16,21 @@
       <div class="diamond"></div>
     </div>
     <div class="login-container">
-      <button id="send-application-for-admin">Заявка на админку</button>
+      <button id="send-application-for-admin">Заявка на права администратора</button>
       <a id="login" href="./login.html">Войти</a>
     </div>
   </header>
   <nav>
     <ul>
       <li><a href="./location.html">Локации</a></li>
-      <li><a href="./person.html">Пользователи</a></li>
+      <li><a href="./person.html">Люди</a></li>
       <li><a href="./product.html">Продукты</a></li>
       <li><a href="./organization.html" class="active">Организации</a></li>
       <li><a href="./address.html">Адреса</a></li>
       <li><a href="./coordinates.html">Координаты</a></li>
       <li><a href="./import_history.html">Импорт</a></li>
-      <li><a href="./special_actions.html">Действия</a></li>
-      <li id="admin-requests-button"><a href="./admin_requests.html">Заявки в админы</a></li>
+      <li><a href="./special_actions.html">Специальные действия</a></li>
+      <li id="admin-requests-button"><a href="./admin_requests.html">Заявки на администратора</a></li>
     </ul>
   </nav>
   <section>
@@ -47,13 +47,13 @@
           <thead>
           <tr>
             <th data-name="id">ID</th>
-            <th data-name="isChangeable">Изменяемый</th>
-            <th data-name="user">Владелец записи</th>
+            <th data-name="isChangeable">Изменяемая</th>
+            <th data-name="user">Пользователь</th>
             <th data-name="name">Название</th>
             <th data-name="officialAddress">Адрес</th>
-            <th data-name="annualTurnover">Оборот</th>
-            <th data-name="employeesCount">Сотрудников</th>
-            <th data-name="fullName">Полное имя</th>
+            <th data-name="annualTurnover">Годовой оборот</th>
+            <th data-name="employeesCount">Сотрудники</th>
+            <th data-name="fullName">Полное название</th>
             <th data-name="rating">Рейтинг</th>
             <th data-name="type">Тип</th>
             <th>Действия</th>
@@ -78,9 +78,10 @@
 <div id="update-modal" class="modal">
   <div class="modal-content">
     <span class="close">&times;</span>
-    <h2>Обновить организацию</h2>
+    <h2>Редактирование организации</h2>
     <div id="update-modal-content"></div>
   </div>
 </div>
 </body>
 </html>
+

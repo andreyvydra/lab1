@@ -41,6 +41,9 @@ public class SecurityConfiguration {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/auth/**").permitAll()
+                        // история импорта доступна любому аутентифицированному пользователю,
+                        // сама сервисная логика уже фильтрует данные по роли и пользователю
+                        .requestMatchers("/api/import-history/**").authenticated()
                         .requestMatchers("/api/**").hasAnyRole("ADMIN", "USER")
                         .requestMatchers("/ws/**").permitAll()
                         .anyRequest().authenticated())

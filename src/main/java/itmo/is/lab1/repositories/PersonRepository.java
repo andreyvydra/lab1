@@ -1,6 +1,5 @@
 package itmo.is.lab1.repositories;
 
-import itmo.is.lab1.models.location.Location;
 import itmo.is.lab1.models.person.Person;
 import org.springframework.stereotype.Repository;
 
@@ -10,4 +9,6 @@ public interface PersonRepository extends GeneralRepository<Person>{
     Boolean existsPersonByPassportIDAndIdNot(String personId, Long id);
     java.util.List<Person> findByLocation_Id(Long locationId);
     void deletePersonByLocation_Id(Long locationId);
+    Boolean existsByNameAndLocation_Id(String name, Long locationId);
+    Boolean existsByNameAndLocation_IdAndIdNot(String name, Long locationId, Long id);
 }

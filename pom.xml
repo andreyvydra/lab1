@@ -105,6 +105,15 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+			<!-- Используем TestNG как основной фреймворк тестирования,
+			     поэтому исключаем JUnit Jupiter, чтобы maven-surefire
+			     автоматически выбрал TestNG provider. -->
+			<exclusions>
+				<exclusion>
+					<groupId>org.junit.jupiter</groupId>
+					<artifactId>junit-jupiter</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
@@ -133,6 +142,11 @@
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
 			<version>5.3.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-csv</artifactId>
+			<version>1.11.0</version>
 		</dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -225,6 +239,20 @@
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <!-- 2.22.2 корректно работает с TestNG и позволяет задать testngArtifactName -->
+                <version>2.22.2</version>
+                <configuration>
+                    <!-- Явно выбираем провайдер TestNG -->
+                    <testngArtifactName>org.testng:testng</testngArtifactName>
+                    <!-- Запускаем все классы, оканчивающиеся на *Test -->
+                    <includes>
+                        <include>**/*Test.java</include>
+                    </includes>
                 </configuration>
             </plugin>
         </plugins>

@@ -10,10 +10,14 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 public class PersonImportRequest extends PersonRequest {
-    @NotNull(message = "x не может быть null.")
+
+    @NotNull(message = "Поле 'x' не должно быть null.")
     private Integer x;
-    @NotNull(message = "y не может быть null.")
+
+    @NotNull(message = "Поле 'y' не должно быть null.")
     private Long y;
-    @NotBlank(message = "nameLoc не может быть пустым.")
+
+    @NotBlank(message = "Поле 'nameLoc' не должно быть пустым.")
     private String nameLoc;
 }
+

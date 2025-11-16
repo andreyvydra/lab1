@@ -41,6 +41,12 @@ public class User implements UserDetails {
     @Column(name = "role", nullable = false)
     private Role role;
 
+    // Явный сеттер для совместимости с кодом и генерацией данных
+    public User setUsername(String username) {
+        this.username = username;
+        return this;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));

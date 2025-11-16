@@ -10,14 +10,8 @@ import 'simple-notify/dist/simple-notify.css';
 class HistoryPaginationTable extends PaginationTable {
     addBodyTable(values) {
         const row = $('<tr>');
-
-        for (const key in values) {
-            if (values.hasOwnProperty(key)) {
-                const cell = $('<td>').text(values[key]);
-                row.append(cell);
-            }
-        }
-
+        const orderedKeys = ['id', 'user', 'startTime', 'endTime', 'status', 'addedObjects'];
+        orderedKeys.forEach(k => row.append($('<td>').text(values[k])));
         this.table.append(row);
     }
 }

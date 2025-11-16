@@ -1,34 +1,35 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <title>Авторизация</title>
+  <meta charset="UTF-8">
+  <title>Вход</title>
 </head>
 <body>
-    <div class="wrapper">
-        <header>
-            <div class="diamond"></div>
-            <div class="header-info">
-                <h2>Авторизация</h2>
-            </div>
-            <div class="diamond"></div>
-        </header>
-        <section>
-            <article class="first-article">
-                <div class="block input">
-                    <form id="form" onsubmit="loginUser(event)">
-                        <label for="username" >Имя пользователя:</label>
-                        <input class="default-input" type="text" id="username" name="username" required>
-                        <br>
-                        <label for="password">Пароль:</label>
-                        <input class="default-input" type="password" id="password" name="password" required>
-                        <br>
-                        <button class="submit-button" type="submit">Войти</button>
-                        <a href="register.html">Ещё не зарегистрированы?</a>
-                    </form>
-                </div>
-            </article>
-        </section>
+<div class="wrapper">
+  <header>
+    <div class="diamond"></div>
+    <div class="header-info">
+      <h2>Вход</h2>
     </div>
+    <div class="diamond"></div>
+  </header>
+  <section>
+    <article class="first-article">
+      <div class="block input">
+        <form id="form" onsubmit="loginUser(event)">
+          <label for="username">Имя пользователя:</label>
+          <input class="default-input" type="text" id="username" name="username" required>
+          <br>
+          <label for="password">Пароль:</label>
+          <input class="default-input" type="password" id="password" name="password" required>
+          <br>
+          <button class="submit-button" type="submit">Войти</button>
+          <a href="register.html">Нет аккаунта? Зарегистрироваться</a>
+        </form>
+      </div>
+    </article>
+  </section>
+</div>
 </body>
 </html>
+

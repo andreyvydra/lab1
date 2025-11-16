@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.transaction.TransactionSystemException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -54,6 +55,24 @@ public class ExceptionAdvice {
     public ResponseEntity<GeneralResponse> AuthException(AuthenticationException e) {
         GeneralMessageResponse response = new GeneralMessageResponse().setMessage("Неверный логин или пароль!");
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<GeneralResponse> handleDataIntegrityViolation(DataIntegrityViolationException e) {
+        String message = "Конфликт данных: запись с такими уникальными полями уже существует.";
+        Throwable cause = e.getMostSpecificCause();
+        if (cause != null && cause.getMessage() != null && cause.getMessage().contains("person_passportid_key")) {
+            message = "Конфликт данных: человек с таким паспортом уже существует.";
+        }
+        GeneralMessageResponse response = new GeneralMessageResponse().setMessage(message);
+        return new ResponseEntity<>(response, BAD_REQUEST);
+    }
+
+    @ExceptionHandler(TransactionSystemException.class)
+    public ResponseEntity<GeneralResponse> handleTransactionSystemException(TransactionSystemException e) {
+        GeneralMessageResponse response = new GeneralMessageResponse()
+                .setMessage("Конфликт параллельных транзакций, попробуйте повторить запрос позже.");
+        return new ResponseEntity<>(response, BAD_REQUEST);
     }
 
     @ExceptionHandler(UsernameNotFoundException.class)
