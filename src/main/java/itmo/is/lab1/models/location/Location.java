@@ -3,6 +3,7 @@ package itmo.is.lab1.models.location;
 import itmo.is.lab1.models.GeneralEntity;
 import itmo.is.lab1.models.user.User;
 import itmo.is.lab1.services.location.requests.LocationRequest;
+import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -10,11 +11,15 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 @Getter
 @Setter
 @Accessors(chain = true)
 @Entity
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "location")
 public class Location extends GeneralEntity<LocationRequest> {
 
@@ -40,4 +45,3 @@ public class Location extends GeneralEntity<LocationRequest> {
     }
 
 }
-

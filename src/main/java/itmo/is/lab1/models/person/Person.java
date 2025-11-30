@@ -6,6 +6,7 @@ import itmo.is.lab1.models.person.enums.Color;
 import itmo.is.lab1.models.person.enums.Country;
 import itmo.is.lab1.services.location.LocationService;
 import itmo.is.lab1.services.person.requests.PersonRequest;
+import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -15,6 +16,8 @@ import jakarta.persistence.ForeignKey;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -27,6 +30,8 @@ import java.util.Optional;
 @Setter
 @Accessors(chain = true)
 @Entity
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "person")
 public class Person extends GeneralEntity<PersonRequest> {
 
@@ -70,4 +75,3 @@ public class Person extends GeneralEntity<PersonRequest> {
         this.height = request.getHeight();
     }
 }
-

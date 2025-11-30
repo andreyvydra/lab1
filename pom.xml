@@ -34,22 +34,12 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>org.hibernate.orm</groupId>
-					<artifactId>hibernate-core</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.hibernate.common</groupId>
-					<artifactId>hibernate-commons-annotations</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 
 		<dependency>
-			<groupId>org.eclipse.persistence</groupId>
-			<artifactId>eclipselink</artifactId>
-			<version>4.0.2</version>
+			<groupId>org.infinispan</groupId>
+			<artifactId>infinispan-hibernate-cache-v66</artifactId>
+			<version>16.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -153,7 +143,6 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
-
 		<dependency>
 			<groupId>us.abstracta.jmeter</groupId>
 			<artifactId>jmeter-java-dsl</artifactId>
@@ -244,12 +233,9 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <!-- 2.22.2 корректно работает с TestNG и позволяет задать testngArtifactName -->
                 <version>2.22.2</version>
                 <configuration>
-                    <!-- Явно выбираем провайдер TestNG -->
                     <testngArtifactName>org.testng:testng</testngArtifactName>
-                    <!-- Запускаем все классы, оканчивающиеся на *Test -->
                     <includes>
                         <include>**/*Test.java</include>
                     </includes>

@@ -6,6 +6,7 @@ import itmo.is.lab1.models.user.User;
 import itmo.is.lab1.models.product.enums.OrganizationType;
 import itmo.is.lab1.repositories.AddressRepository;
 import itmo.is.lab1.services.product.requests.OrganizationRequest;
+import jakarta.persistence.Cacheable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
@@ -14,12 +15,16 @@ import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import java.util.Optional;
 
 @Getter
 @Setter
 @Accessors(chain = true)
 @Entity
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "organization")
 public class Organization extends GeneralEntity<OrganizationRequest> {
 
@@ -55,6 +60,5 @@ public class Organization extends GeneralEntity<OrganizationRequest> {
         this.type = request.getType();
     }
 }
-
 
 

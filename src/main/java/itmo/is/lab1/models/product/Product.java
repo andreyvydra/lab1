@@ -10,6 +10,7 @@ import itmo.is.lab1.repositories.PersonRepository;
 import itmo.is.lab1.services.product.requests.ProductRequest;
 import itmo.is.lab1.models.person.Person;
 import itmo.is.lab1.models.product.enums.UnitOfMeasure;
+import jakarta.persistence.Cacheable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -18,6 +19,8 @@ import jakarta.validation.constraints.Min;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
@@ -27,6 +30,8 @@ import java.util.Optional;
 @Setter
 @Accessors(chain = true)
 @Entity
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "product")
 public class Product extends GeneralEntity<ProductRequest> {
 
@@ -88,5 +93,4 @@ public class Product extends GeneralEntity<ProductRequest> {
         if (this.creationDate == null) this.creationDate = new Date();
     }
 }
-
 

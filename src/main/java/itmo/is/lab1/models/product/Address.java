@@ -5,16 +5,21 @@ import itmo.is.lab1.models.location.Location;
 import itmo.is.lab1.models.user.User;
 import itmo.is.lab1.repositories.LocationRepository;
 import itmo.is.lab1.services.product.requests.AddressRequest;
+import jakarta.persistence.Cacheable;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import java.util.Optional;
 
 @Getter
 @Setter
 @Accessors(chain = true)
 @Entity
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "address")
 public class Address extends GeneralEntity<AddressRequest> {
 
@@ -33,6 +38,5 @@ public class Address extends GeneralEntity<AddressRequest> {
         }
     }
 }
-
 
 
