@@ -15,26 +15,20 @@ import itmo.is.lab1.services.location.LocationService;
 import itmo.is.lab1.services.person.requests.PersonImportRequest;
 import itmo.is.lab1.services.person.requests.PersonRequest;
 import itmo.is.lab1.services.person.responses.PersonResponse;
+import itmo.is.lab1.services.storage.FileStorageService;
+import itmo.is.lab1.services.storage.FileStorageService.StoredObject;
 import jakarta.validation.ValidationException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.CannotAcquireLockException;
-import org.springframework.dao.CannotSerializeTransactionException;
-import org.springframework.dao.DeadlockLoserDataAccessException;
-import org.springframework.dao.OptimisticLockingFailureException;
-import org.springframework.dao.PessimisticLockingFailureException;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.TransactionSystemException;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -46,11 +40,11 @@ import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 @Service
+@Slf4j
 public class PersonService extends GeneralService<PersonRequest, PersonResponse, Person, PersonRepository> {
 
     @Autowired
@@ -64,6 +58,13 @@ public class PersonService extends GeneralService<PersonRequest, PersonResponse,
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private FileStorageService fileStorageService;
+
+    @Autowired
+    @Lazy
+    private PersonService self;
 
     @Override
     protected PersonResponse buildResponse(Person element) {
@@ -99,7 +100,7 @@ public class PersonService extends GeneralService<PersonRequest, PersonResponse,
 
     @Override
     @Retryable(
-            retryFor  = {
+            retryFor = {
                     SQLException.class,
             },
             maxAttempts = 10,
@@ -118,15 +119,33 @@ public class PersonService extends GeneralService<PersonRequest, PersonResponse,
         return buildResponse(entity);
     }
 
+    public int importFromCsv(MultipartFile file) throws IOException, ValidationException {
+        StoredObject storedObject = fileStorageService.storeImportFile(file);
+        ImportHistory history = importHistoryService.startImport(userService.getCurrentUser());
+        try {
+            int added = self.importFromCsvInternal(file);
+            importHistoryService.finishImport(history, "SUCCESS", added,
+                    storedObject.getOriginalFileName(), storedObject.getObjectKey());
+            messagingTemplate.convertAndSend("/topic/entities", "Imported from CSV");
+            log.info("Success id: {}, stat: {}", history.getId(), history.getStatus());
+            return added;
+        } catch (Throwable e) {
+            importHistoryService.finishImport(history, "FAILED", 0, null, null);
+            log.info("id: {}, stat: {}", history.getId(), history.getStatus());
+            log.info("Error importing from CSV {}", e.getMessage());
+            throw e;
+        }
+    }
+
     @Retryable(
-            retryFor = SQLException.class,
+            retryFor = {SQLException.class},
             maxAttempts = 10,
             backoff = @Backoff(delay = 500, maxDelay = 5000, multiplier = 2.0, random = true)
     )
     @Transactional(isolation = Isolation.SERIALIZABLE)
-    public int importFromCsv(MultipartFile file) throws IOException, ValidationException {
+    public int importFromCsvInternal(MultipartFile file) throws IOException, ValidationException {
         List<Person> persons = new ArrayList<>();
-        ImportHistory history = importHistoryService.startImport(userService.getCurrentUser());
+
         Set<String> passportsInFile = new HashSet<>();
         Set<String> compositeInFile = new HashSet<>();
         int added = 0;
@@ -188,16 +207,13 @@ public class PersonService extends GeneralService<PersonRequest, PersonResponse,
                 added++;
             }
 
-            if (!persons.isEmpty()) {
-                locationRepository.saveAll(persons.stream().map(Person::getLocation).toList());
-                repository.saveAll(persons);
+            if (added == 0) {
+                throw new GeneralException(HttpStatus.BAD_REQUEST, "Файл указан пустой или не содержит ни одного ряда.");
             }
-            importHistoryService.finishImport(history, "SUCCESS", added);
-            messagingTemplate.convertAndSend("/topic/entities", "Imported from CSV");
+
+            locationRepository.saveAll(persons.stream().map(Person::getLocation).toList());
+            repository.saveAll(persons);
             return added;
-        } catch (Exception e) {
-            importHistoryService.finishImport(history, "FAILED", 0);
-            throw e;
         }
     }
 

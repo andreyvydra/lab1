@@ -26,4 +26,7 @@ public class ImportHistory {
     private LocalDateTime endTime;
     private String status;
     private Integer addedObjects;
+
+    private String originalFileName;
+    private String objectKey;
 }

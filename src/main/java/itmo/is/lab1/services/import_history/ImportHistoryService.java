@@ -32,20 +32,28 @@ public class ImportHistoryService {
     @Autowired
     private UserService userService;
 
+    public ImportHistory getById(Long id) {
+        return importHistoryRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Import history not found: " + id));
+    }
+
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public ImportHistory startImport(User user) {
         ImportHistory history = new ImportHistory();
         history.setUser(user);
         history.setStartTime(LocalDateTime.now());
         history.setStatus("IN_PROGRESS");
+
         return importHistoryRepository.save(history);
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void finishImport(ImportHistory history, String status, Integer addedObjects) {
+    public void finishImport(ImportHistory history, String status, Integer addedObjects, String originalFileName, String objectKey) {
         history.setEndTime(LocalDateTime.now());
         history.setStatus(status);
         history.setAddedObjects(addedObjects);
+        history.setOriginalFileName(originalFileName);
+        history.setObjectKey(objectKey);
         importHistoryRepository.save(history);
     }
 
@@ -89,6 +97,8 @@ public class ImportHistoryService {
                 .setAddedObjects(history.getAddedObjects())
                 .setStartTime(history.getStartTime())
                 .setEndTime(history.getEndTime())
-                .setUser(history.getUser().getId());
+                .setUser(history.getUser().getId())
+                .setOriginalFileName(history.getOriginalFileName())
+                .setDownloadUrl(history.getObjectKey() == null ? null : "/api/import-history/" + history.getId() + "/file");
     }
 }
