@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<infinispan
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="urn:infinispan:config:14.0 https://infinispan.org/schemas/infinispan-config-14.0.xsd"
+        xmlns="urn:infinispan:config:14.0">
+    <cache-container name="hibernate" default-cache="entity" statistics="true">
+        <jmx domain="infinispan" enabled="true"/>
+
+        <local-cache name="immutable-entity" statistics="true" configuration="entity">
+            <memory max-count="20000"/>
+        </local-cache>
+        <local-cache name="natural-id" statistics="true" configuration="entity">
+            <memory max-count="20000"/>
+        </local-cache>
+        <local-cache name="collection" statistics="true" configuration="entity">
+            <memory max-count="20000"/>
+        </local-cache>
+
+        <local-cache name="query" statistics="true" configuration="local-query">
+            <expiration max-idle="600000"/></local-cache>
+        <local-cache name="timestamps" statistics="true">
+            <expiration max-idle="600000"/>
+        </local-cache>
+
+        <local-cache name="pending-puts" statistics="true">
+            <expiration max-idle="120000"/>
+        </local-cache>
+    </cache-container>
+</infinispan>
