@@ -1,4 +1,4 @@
-import $ from "jquery";
+﻿import $ from "jquery";
 import {getAuthHeader, redirectIfAuthenticated} from "./common/utils";
 import ErrorNotify from "./common/notifications/errorNotify";
 import './common/common';
@@ -47,7 +47,7 @@ class HistoryPaginationTable extends PaginationTable {
                         URL.revokeObjectURL(objectUrl);
                     } catch (err) {
                         console.error('File download failed', err);
-                        new ErrorNotify('Скачивание файла', err.message || 'Сервис для работы с файлами недоступен');
+                        new ErrorNotify('Не удалось загрузить файл', err.message || 'Сервис для работы с файлами недоступен');
                     }
                 });
             downloadCell.append(link);

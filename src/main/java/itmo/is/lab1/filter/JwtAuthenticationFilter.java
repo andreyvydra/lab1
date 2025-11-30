@@ -9,14 +9,19 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.exception.JDBCConnectionException;
+import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.CannotCreateTransactionException;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.SQLTransientConnectionException;
 
 @Component
 @RequiredArgsConstructor
@@ -48,11 +53,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String username = jwtService.extractUserName(jwt);
 
         if (!username.isEmpty() && SecurityContextHolder.getContext().getAuthentication() == null) {
-            User user = userService
-                    .getByUsername(username);
+            User user;
+            try {
+                user = userService.getByUsername(username);
+            } catch (Exception ex) {
+                if (isDbUnavailable(ex)) {
+                    writeServiceUnavailable(response);
+                    return;
+                }
+                throw ex;
+            }
 
-
-            // Если токен валиден, то аутентифицируем пользователя
             if (jwtService.isTokenValid(jwt, user)) {
                 SecurityContext context = SecurityContextHolder.createEmptyContext();
 
@@ -68,5 +79,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         }
         filterChain.doFilter(request, response);
+    }
+
+    private boolean isDbUnavailable(Throwable ex) {
+        if (ex == null) {
+            return false;
+        }
+        return ex instanceof CannotCreateTransactionException
+                || ex instanceof JDBCConnectionException
+                || ex instanceof SQLTransientConnectionException
+                || ex instanceof JpaSystemException
+                || isDbUnavailable(ex.getCause());
+    }
+
+    private void writeServiceUnavailable(HttpServletResponse response) throws IOException {
+        response.setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
+        response.setContentType("application/json;charset=UTF-8");
+        try (PrintWriter writer = response.getWriter()) {
+            writer.write("{\"message\":\"Сервис базы данных недоступен\"}");
+        }
     }
 }
