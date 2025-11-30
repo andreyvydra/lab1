@@ -1,5 +1,6 @@
 import $ from "jquery";
 import {getAuthHeader, redirectIfAuthenticated} from "./common/utils";
+import ErrorNotify from "./common/notifications/errorNotify";
 import './common/common';
 import './common/modal';
 import {PaginationTable} from "./common/pagination";
@@ -26,11 +27,14 @@ class HistoryPaginationTable extends PaginationTable {
                 .on('click', async (e) => {
                     e.preventDefault();
                     try {
-                        const response = await fetch(values['downloadUrl'], {
-                            headers: getAuthHeader()
-                        });
+                        const response = await fetch(values['downloadUrl'], { headers: getAuthHeader() });
                         if (!response.ok) {
-                            throw new Error(`Download failed with status ${response.status}`);
+                            let message = 'Сервис для работы с файлами недоступен';
+                            try {
+                                const data = await response.json();
+                                if (data?.message) message = data.message;
+                            } catch (_) { /* ignore parse errors */ }
+                            throw new Error(message);
                         }
                         const blob = await response.blob();
                         const objectUrl = URL.createObjectURL(blob);
@@ -43,6 +47,7 @@ class HistoryPaginationTable extends PaginationTable {
                         URL.revokeObjectURL(objectUrl);
                     } catch (err) {
                         console.error('File download failed', err);
+                        new ErrorNotify('Скачивание файла', err.message || 'Сервис для работы с файлами недоступен');
                     }
                 });
             downloadCell.append(link);

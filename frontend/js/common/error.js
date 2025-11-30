@@ -30,7 +30,7 @@ export function errorNotifies(xhr) {
     } else {
         new ErrorNotify(
             "Ошибка",
-            xhr.status + " " + xhr.responseText
+            JSON.parse(xhr.responseText).message
         )
     }
 }

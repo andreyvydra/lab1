@@ -12,8 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.support.TransactionSynchronization;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
@@ -43,28 +41,7 @@ public class FileStorageService {
                             .build()
             );
         } catch (Exception e) {
-            throw new StorageException("Failed to upload file to object storage", e);
-        }
-
-        if (TransactionSynchronizationManager.isActualTransactionActive()) {
-            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-                @Override
-                public void afterCompletion(int status) {
-                    if (status == STATUS_ROLLED_BACK) {
-                        try {
-                            minioClient.removeObject(
-                                    io.minio.RemoveObjectArgs.builder()
-                                            .bucket(bucket)
-                                            .object(objectKey)
-                                            .build()
-                            );
-                            log.warn("Rolled back import, removed object {}", objectKey);
-                        } catch (Exception ex) {
-                            log.error("Failed to cleanup object {} after rollback", objectKey, ex);
-                        }
-                    }
-                }
-            });
+            throw new StorageUnavailableException(e);
         }
 
         return new StoredObject(objectKey, file.getOriginalFilename(), file.getContentType(), file.getSize());
@@ -80,7 +57,7 @@ public class FileStorageService {
             );
             return new InputStreamResource(stream);
         } catch (Exception e) {
-            throw new StorageException("Failed to download object: " + objectKey, e);
+            throw new StorageUnavailableException(e);
         }
     }
 
@@ -91,7 +68,7 @@ public class FileStorageService {
                 minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucket).build());
             }
         } catch (Exception e) {
-            throw new StorageException("Failed to ensure bucket existence", e);
+            throw new StorageUnavailableException(e);
         }
     }
 
@@ -107,11 +84,5 @@ public class FileStorageService {
         private String originalFileName;
         private String contentType;
         private long size;
-    }
-}
-
-class StorageException extends RuntimeException {
-    StorageException(String message, Throwable cause) {
-        super(message, cause);
     }
 }

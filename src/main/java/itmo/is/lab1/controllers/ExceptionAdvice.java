@@ -3,6 +3,7 @@ package itmo.is.lab1.controllers;
 import itmo.is.lab1.services.common.errors.GeneralException;
 import itmo.is.lab1.services.common.responses.GeneralMessageResponse;
 import itmo.is.lab1.services.common.responses.GeneralResponse;
+import itmo.is.lab1.services.storage.StorageUnavailableException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -79,6 +80,12 @@ public class ExceptionAdvice {
     public ResponseEntity<GeneralResponse> handleUsernameException(ConstraintViolationException e) {
         GeneralMessageResponse response = new GeneralMessageResponse().setMessage(e.getMessage());
         return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(StorageUnavailableException.class)
+    public ResponseEntity<GeneralResponse> handleStorageUnavailable(StorageUnavailableException e) {
+        GeneralMessageResponse response = new GeneralMessageResponse().setMessage(e.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.SERVICE_UNAVAILABLE);
     }
 
 }

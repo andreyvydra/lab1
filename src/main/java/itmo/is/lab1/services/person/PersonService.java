@@ -120,9 +120,10 @@ public class PersonService extends GeneralService<PersonRequest, PersonResponse,
     }
 
     public int importFromCsv(MultipartFile file) throws IOException, ValidationException {
-        StoredObject storedObject = fileStorageService.storeImportFile(file);
         ImportHistory history = importHistoryService.startImport(userService.getCurrentUser());
+
         try {
+            StoredObject storedObject = fileStorageService.storeImportFile(file);
             int added = self.importFromCsvInternal(file);
             importHistoryService.finishImport(history, "SUCCESS", added,
                     storedObject.getOriginalFileName(), storedObject.getObjectKey());
