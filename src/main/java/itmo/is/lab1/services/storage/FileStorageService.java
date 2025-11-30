@@ -5,6 +5,7 @@ import io.minio.GetObjectArgs;
 import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
+import io.minio.RemoveObjectArgs;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -58,6 +59,19 @@ public class FileStorageService {
             return new InputStreamResource(stream);
         } catch (Exception e) {
             throw new StorageUnavailableException(e);
+        }
+    }
+
+    public void deleteObject(String objectKey) {
+        try {
+            minioClient.removeObject(
+                    RemoveObjectArgs.builder()
+                            .bucket(bucket)
+                            .object(objectKey)
+                            .build()
+            );
+        } catch (Exception e) {
+            log.warn("Failed to delete object {} from bucket {}: {}", objectKey, bucket, e.getMessage());
         }
     }
 

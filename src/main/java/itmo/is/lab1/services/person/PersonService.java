@@ -38,10 +38,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -121,9 +118,10 @@ public class PersonService extends GeneralService<PersonRequest, PersonResponse,
 
     public int importFromCsv(MultipartFile file) throws IOException, ValidationException {
         ImportHistory history = importHistoryService.startImport(userService.getCurrentUser());
+        StoredObject storedObject = null;
 
         try {
-            StoredObject storedObject = fileStorageService.storeImportFile(file);
+            storedObject = fileStorageService.storeImportFile(file);
             int added = self.importFromCsvInternal(file);
             importHistoryService.finishImport(history, "SUCCESS", added,
                     storedObject.getOriginalFileName(), storedObject.getObjectKey());
@@ -131,6 +129,10 @@ public class PersonService extends GeneralService<PersonRequest, PersonResponse,
             log.info("Success id: {}, stat: {}", history.getId(), history.getStatus());
             return added;
         } catch (Throwable e) {
+            if (!Objects.isNull(storedObject)) {
+                fileStorageService.deleteObject(storedObject.getObjectKey());
+                log.info("File object deleted from minio: {}", file.getOriginalFilename());
+            }
             importHistoryService.finishImport(history, "FAILED", 0, null, null);
             log.info("id: {}, stat: {}", history.getId(), history.getStatus());
             log.info("Error importing from CSV {}", e.getMessage());
